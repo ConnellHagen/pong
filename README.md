@@ -1,5 +1,7 @@
-# sdl2-gameloop-template
+# About
  
-This is a template repository for the gameloop while making a game in C++ with the SDL2 library.
-This code is copied from codergopher's youtube series on creating an RPG platformer in C++.
-Feel free to copy this code, as it is not mine.
+This is a recreation of the Atari game 'Pong' as a practice exercise in creating games using the SDL2 library of c++.
+
+# Installation
+
+I will not tell you how to do this. This game is in a very rough state and your eyes should not look at it yet :)
