@@ -26,23 +26,22 @@ int main(int argc, char* args[])
 
 	SDL_Texture* ball_t = window.loadTexture("res/images/ball.png");
 	SDL_Rect ball_inf = {0, 0, 16, 16};
-	SDL_Texture* paddle_t = window.loadTexture("res/images/paddle.png");
-	SDL_Rect paddle_inf = {0, 0, 32, 128};
+	// SDL_Texture* paddle_t = window.loadTexture("res/images/paddle.png");
+	// SDL_Rect paddle_inf = {0, 0, 32, 128};
 	// SDL_Texture* barrier_t = window.loadTexture("res/images/barrier.png");
 	// SDL_Texture* barrier_large_t = window.loadTexture("res/images/barrier.png");
 
 	vector<Entity> entities = 
 	{
-		Ball(Vector2f(1000, 150), Vector2f(3, 3), ball_t, ball_inf), 
-		Paddle(Vector2f(0, 0), Vector2f(2, 2), paddle_t, paddle_inf), 
-		Paddle(Vector2f(300, 0), Vector2f(1, 1), paddle_t, paddle_inf) 
+		Ball(Vector2f(100, 100), Vector2f(10, 10), ball_t, ball_inf), 
+		Ball(Vector2f(100, 100), Vector2f(10, 10), ball_t, ball_inf)
 	};
 
 	bool gameRunning = true;
 
 	SDL_Event event;
 
-	const float deltaTime = 0.01f;
+	const float deltaTime = .01;
 	float accumulator = 0.0f;
 	float currentTime = utils::hireTimeInSeconds(); 
 

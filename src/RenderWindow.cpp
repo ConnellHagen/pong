@@ -4,6 +4,8 @@
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
+#include "Ball.hpp"
+#include "Paddle.hpp"
 
 RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
@@ -51,14 +53,14 @@ void RenderWindow::clear()
 void RenderWindow::render(Entity &p_entity)
 {
 	SDL_Rect src;
-	src.x = p_entity.getCurrentFrame().x;
-	src.y = p_entity.getCurrentFrame().y;
-	src.w = p_entity.getCurrentFrame().w;
-	src.h = p_entity.getCurrentFrame().h;
+	src.x = p_entity.getOriginalImage().x;
+	src.y = p_entity.getOriginalImage().y;
+	src.w = p_entity.getOriginalImage().w;
+	src.h = p_entity.getOriginalImage().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getPos().x + p_entity.getCurrentFrame().w * (1 - p_entity.getScale().x);
-	dst.y = p_entity.getPos().y + p_entity.getCurrentFrame().h * (1 - p_entity.getScale().y);
+	dst.x = p_entity.getCurrentFrame().x;
+	dst.y = p_entity.getCurrentFrame().y;
 	dst.w = p_entity.getCurrentFrame().w * p_entity.getScale().x;
 	dst.h = p_entity.getCurrentFrame().h * p_entity.getScale().y;
 
