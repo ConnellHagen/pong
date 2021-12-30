@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
 
 RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
@@ -22,13 +23,49 @@ SDL_Texture* RenderWindow::loadTexture(const char* p_filePath)
 	texture = IMG_LoadTexture(renderer, p_filePath);
 
 	if(texture == NULL)
-		std::cout << "Failed to load texture. Error: " << SDL_GetError << "\n";
+		std::cout << "Failed to load texture. Error: " << SDL_GetError() << "\n";
 
 	return texture;
 
+}
+ 
+int RenderWindow::getRefreshRate()
+{
+	int displayIndex = SDL_GetWindowDisplayIndex(window);
+	SDL_DisplayMode mode;
+	SDL_GetDisplayMode(displayIndex, 0, &mode);
+	
+	return mode.refresh_rate;
 }
 
 void RenderWindow::cleanUp()
 {
 	SDL_DestroyWindow(window);
+}
+
+void RenderWindow::clear()
+{
+	SDL_RenderClear(renderer);
+}
+	
+void RenderWindow::render(Entity &p_entity)
+{
+	SDL_Rect src;
+	src.x = p_entity.getCurrentFrame().x;
+	src.y = p_entity.getCurrentFrame().y;
+	src.w = p_entity.getCurrentFrame().w;
+	src.h = p_entity.getCurrentFrame().h;
+
+	SDL_Rect dst;
+	dst.x = p_entity.getPos().x + p_entity.getCurrentFrame().w * (1 - p_entity.getScale().x);
+	dst.y = p_entity.getPos().y + p_entity.getCurrentFrame().h * (1 - p_entity.getScale().y);
+	dst.w = p_entity.getCurrentFrame().w * p_entity.getScale().x;
+	dst.h = p_entity.getCurrentFrame().h * p_entity.getScale().y;
+
+	SDL_RenderCopy(renderer, p_entity.getTexture(), &src, &dst);
+}
+	
+void RenderWindow::display()
+{
+	SDL_RenderPresent(renderer);
 }

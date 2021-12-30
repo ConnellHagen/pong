@@ -1,8 +1,16 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <vector>
 
 #include "RenderWindow.hpp"
+#include "Entity.hpp"
+#include "Paddle.hpp"
+#include "Ball.hpp"
+#include "Math.hpp"
+#include "utils.hpp"
+
+using std::vector;
 
 int main(int argc, char* args[])
 {
@@ -16,17 +24,66 @@ int main(int argc, char* args[])
 
 	RenderWindow window("Game Title", 1280, 720);
 
+	SDL_Texture* ball_t = window.loadTexture("res/images/ball.png");
+	SDL_Rect ball_inf = {0, 0, 16, 16};
+	SDL_Texture* paddle_t = window.loadTexture("res/images/paddle.png");
+	SDL_Rect paddle_inf = {0, 0, 32, 128};
+	// SDL_Texture* barrier_t = window.loadTexture("res/images/barrier.png");
+	// SDL_Texture* barrier_large_t = window.loadTexture("res/images/barrier.png");
+
+	vector<Entity> entities = 
+	{
+		Ball(Vector2f(1000, 150), Vector2f(3, 3), ball_t, ball_inf), 
+		Paddle(Vector2f(0, 0), Vector2f(2, 2), paddle_t, paddle_inf), 
+		Paddle(Vector2f(300, 0), Vector2f(1, 1), paddle_t, paddle_inf) 
+	};
+
 	bool gameRunning = true;
 
 	SDL_Event event;
 
+	const float deltaTime = 0.01f;
+	float accumulator = 0.0f;
+	float currentTime = utils::hireTimeInSeconds(); 
+
 	while(gameRunning)
 	{
-		while(SDL_PollEvent(&event))
+		int startTicks = SDL_GetTicks();
+
+		float newTime = utils::hireTimeInSeconds();
+		float frameTime = newTime - currentTime;
+		currentTime = newTime;
+		accumulator += frameTime;
+
+		while(accumulator >= deltaTime)
 		{
-			if(event.type == SDL_QUIT)
-				gameRunning = false;
+			while(SDL_PollEvent(&event))
+			{
+				if(event.type == SDL_QUIT)
+					gameRunning = false;
+			}
+
+			accumulator -= deltaTime;
+
 		}
+
+		// const float alpha = accumulator / deltaTime;
+		
+
+		window.clear();
+
+		for(Entity& temp_entity : entities)
+		{
+			window.render(temp_entity);
+		}
+
+		window.display();
+
+		int frameTicks = SDL_GetTicks() - startTicks;
+
+		if(frameTicks < 1000 / window.getRefreshRate())
+			SDL_Delay(1000 / window.getRefreshRate() - frameTicks);
+
 	}
 
 	window.cleanUp();
