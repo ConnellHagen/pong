@@ -5,10 +5,8 @@
 #include "Entity.hpp"
 #include "Ball.hpp"
 
-Ball::Ball(Vector2f p_pos, Vector2f p_scale, SDL_Texture* p_texture, SDL_Rect p_imgdata)
-	:Entity(p_pos, p_scale, p_texture)
+Ball::Ball(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata)
+	:Entity(p_pos, p_scale, p_texture, p_imgdata)
 {
-	Entity::setOriginalImage(p_imgdata);
-	SDL_Rect current = {static_cast<int>(p_pos.x), static_cast<int>(p_pos.y), static_cast<int>(p_scale.x), static_cast<int>(p_scale.y)};
-	Entity::setCurrentFrame(current);
+	Entity::set_original_image(p_imgdata);
 }

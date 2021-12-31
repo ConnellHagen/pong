@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -7,29 +8,30 @@
 class Entity
 {
 public:
-	Entity(Vector2f p_pos, Vector2f p_scale, SDL_Texture* p_texture);
+	Entity(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect p_imgdata)
+	:original_img(p_imgdata), texture(p_texture), pos(p_pos), scale(p_scale)
+	{}
 
-	// inline Vector2f& getPos(){return pos;}
-	// inline void setPos(float const &p_x, float const &p_y){pos = Vector2f(p_x, p_y);}
+	inline Vector2f& get_pos(){return pos;}
+	inline void set_pos(Vector2f const &p_pos){pos = p_pos;}
 
-	inline float getAngle(){return angle;}
-	inline void setAngle(float const &p_angle){angle = p_angle;}
+	inline float get_angle(){return angle;}
+	inline void set_angle(float const &p_angle){angle = p_angle;}
 
-	inline Vector2f& getScale(){return scale;}
-	inline void setScale(float const &p_w, float const &p_h){scale = Vector2f(p_w, p_h);}
+	inline Vector2f& get_scale(){return scale;}
+	inline void set_scale(float const &p_w, float const &p_h){scale = Vector2f(p_w, p_h);}
 
-	inline SDL_Texture* getTexture(){return texture;}
+	inline SDL_Texture* get_texture(){return texture;}
 
-	inline SDL_Rect getCurrentFrame(){return currentFrame;}
-	inline void setCurrentFrame(SDL_Rect const &frame){currentFrame = frame;}
+	// inline SDL_Rect get_current_image(){return current_img;}
+	// inline void set_current_image(SDL_Rect const &p_img){current_img = p_img;}
 
-	inline void setOriginalImage(SDL_Rect const &imgdata){originalImg = imgdata;}
-	inline SDL_Rect getOriginalImage(){return originalImg;}
+	inline SDL_Rect get_original_image(){return original_img;}
+	inline void set_original_image(SDL_Rect const &p_imgdata){original_img = p_imgdata;}
 
 private:
 	float angle = 0;
-	SDL_Rect currentFrame;
-	SDL_Rect originalImg;
+	SDL_Rect original_img;
 	SDL_Texture* texture;
 	Vector2f pos;
 	Vector2f scale;

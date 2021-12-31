@@ -1,14 +1,9 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include <iostream>
 
 #include "RenderWindow.hpp"
-#include "Entity.hpp"
-#include "Ball.hpp"
-#include "Paddle.hpp"
 
-RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
-	:window(NULL), renderer(NULL)
+RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h, Vector2f p_scalar)
+	:window(NULL), renderer(NULL), universal_scalar(p_scalar)
 {
 	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, p_w, p_h, SDL_WINDOW_SHOWN);
 	if(window == NULL)
@@ -19,7 +14,7 @@ RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
-SDL_Texture* RenderWindow::loadTexture(const char* p_filePath)
+SDL_Texture* RenderWindow::load_texture(const char* p_filePath)
 {
 	SDL_Texture* texture = NULL;
 	texture = IMG_LoadTexture(renderer, p_filePath);
@@ -31,7 +26,7 @@ SDL_Texture* RenderWindow::loadTexture(const char* p_filePath)
 
 }
  
-int RenderWindow::getRefreshRate()
+int RenderWindow::get_refresh_rate()
 {
 	int displayIndex = SDL_GetWindowDisplayIndex(window);
 	SDL_DisplayMode mode;
@@ -40,7 +35,7 @@ int RenderWindow::getRefreshRate()
 	return mode.refresh_rate;
 }
 
-void RenderWindow::cleanUp()
+void RenderWindow::clean_up()
 {
 	SDL_DestroyWindow(window);
 }
@@ -50,21 +45,47 @@ void RenderWindow::clear()
 	SDL_RenderClear(renderer);
 }
 	
-void RenderWindow::render(Entity &p_entity)
+void RenderWindow::render(Entity p_entity)
 {
 	SDL_Rect src;
-	src.x = p_entity.getOriginalImage().x;
-	src.y = p_entity.getOriginalImage().y;
-	src.w = p_entity.getOriginalImage().w;
-	src.h = p_entity.getOriginalImage().h;
+	src.x = p_entity.get_original_image().x;
+	src.y = p_entity.get_original_image().y;
+	src.w = p_entity.get_original_image().w;
+	src.h = p_entity.get_original_image().h;
 
 	SDL_Rect dst;
-	dst.x = p_entity.getCurrentFrame().x;
-	dst.y = p_entity.getCurrentFrame().y;
-	dst.w = p_entity.getCurrentFrame().w * p_entity.getScale().x;
-	dst.h = p_entity.getCurrentFrame().h * p_entity.getScale().y;
+	dst.x = p_entity.get_pos().x * universal_scalar.x;
+	dst.y = p_entity.get_pos().y * universal_scalar.y;
+	dst.w = p_entity.get_original_image().w * universal_scalar.x * p_entity.get_scale().x;
+	dst.h = p_entity.get_original_image().h * universal_scalar.y * p_entity.get_scale().y;
 
-	SDL_RenderCopy(renderer, p_entity.getTexture(), &src, &dst);
+	SDL_RenderCopy(renderer, p_entity.get_texture(), &src, &dst);
+}
+
+void RenderWindow::render(Tile p_tile)
+{
+	SDL_Rect src;
+	src.x = p_tile.get_original_image().x;
+	src.y = p_tile.get_original_image().y;
+	src.w = p_tile.get_original_image().w;
+	src.h = p_tile.get_original_image().h;
+
+	SDL_Rect dst;
+	dst.x = p_tile.get_pos().x;
+	dst.y = p_tile.get_pos().y;
+	dst.w = p_tile.get_original_image().w * p_tile.get_scale().x;
+	dst.h = p_tile.get_original_image().h * p_tile.get_scale().y;
+
+	SDL_RenderCopy(renderer, p_tile.get_texture(), &src, &dst);
+}
+
+void RenderWindow::render(Background p_background)
+{
+	std::vector<Tile> render_list = p_background.get_tile_list();
+	for(Tile background_tile : render_list)
+	{
+		render(background_tile);
+	}
 }
 	
 void RenderWindow::display()
