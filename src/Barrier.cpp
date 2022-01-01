@@ -5,3 +5,6 @@ Barrier::Barrier(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* co
 {
 	Entity::set_original_image(p_imgdata);
 }
+
+void Barrier::update()
+{}

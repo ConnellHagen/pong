@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 struct Vector2f
 {
@@ -20,3 +22,8 @@ struct Vector2f
 	float x, y;
 
 };
+
+namespace game_math
+{
+	bool rect_collide(SDL_Rect rect1, SDL_Rect rect2);	
+}

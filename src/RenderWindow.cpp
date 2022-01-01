@@ -59,7 +59,7 @@ void RenderWindow::render(Entity p_entity)
 	dst.w = p_entity.get_original_image().w * universal_scalar.x * p_entity.get_scale().x;
 	dst.h = p_entity.get_original_image().h * universal_scalar.y * p_entity.get_scale().y;
 
-	SDL_RenderCopy(renderer, p_entity.get_texture(), &src, &dst);
+	SDL_RenderCopyEx(renderer, p_entity.get_texture(), &src, &dst, static_cast<double>(p_entity.get_angle()), NULL, SDL_FLIP_NONE);
 }
 
 void RenderWindow::render(Tile p_tile)

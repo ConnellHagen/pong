@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
 
 #include "Math.hpp"
 
@@ -12,11 +13,12 @@ public:
 	:original_img(p_imgdata), texture(p_texture), pos(p_pos), scale(p_scale)
 	{}
 
-	inline Vector2f& get_pos(){return pos;}
+	inline Vector2f get_pos(){return pos;}
 	inline void set_pos(Vector2f const &p_pos){pos = p_pos;}
 
 	inline float get_angle(){return angle;}
 	inline void set_angle(float const &p_angle){angle = p_angle;}
+	inline void rotate_deg(float const &p_rotation){angle += p_rotation;}
 
 	inline Vector2f& get_scale(){return scale;}
 	inline void set_scale(float const &p_w, float const &p_h){scale = Vector2f(p_w, p_h);}
@@ -28,6 +30,10 @@ public:
 
 	inline SDL_Rect get_original_image(){return original_img;}
 	inline void set_original_image(SDL_Rect const &p_imgdata){original_img = p_imgdata;}
+
+	SDL_Rect get_border_box();
+
+	bool is_point_within(Vector2f const &point);
 
 private:
 	float angle = 0;

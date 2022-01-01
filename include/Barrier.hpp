@@ -10,5 +10,6 @@ class Barrier : public Entity
 {
 public:
 	Barrier(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata);
+	void update();
 
 };

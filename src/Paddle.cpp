@@ -5,3 +5,6 @@ Paddle::Paddle(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* cons
 {
 	Entity::set_original_image(p_imgdata);
 }
+
+void Paddle::update()
+{}
