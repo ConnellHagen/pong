@@ -33,3 +33,6 @@
 # Sublime Text
 *.sublime-project
 *.sublime-workspace
+
+# Folders
+**/layouts/

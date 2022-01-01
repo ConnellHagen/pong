@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "Math.hpp"
 #include "Entity.hpp"
 #include "Ball.hpp"
@@ -15,6 +17,32 @@ void Ball::scale_velocity(Vector2f const &p_scale)
 	velocity.y *= p_scale.y;
 }
 
+void Ball::random_rotation_velocity()
+{
+	bool is_negative = rotation_velocity < 0;
+	srand((unsigned int) time (NULL)); //activates the generator
+    rotation_velocity = rand() % 10 + 1;        //gives a random from 0 to 9
+    if(is_negative)
+    	rotation_velocity *= -1;
+}
+
+//0 for right, 1 for left
+void Ball::set_rotation_direction(int const &direction)
+{
+	if((direction == 0 && rotation_velocity >= 0) || (direction == 1 && rotation_velocity < 0))
+		return;
+	else 
+		rotation_velocity *= -1;
+}
+
+int Ball::get_rotation_direction()
+{
+	if(rotation_velocity >= 0)
+		return 0;
+	else
+		return 1;
+}
+
 Vector2f Ball::next_pos()
 {
 	Vector2f new_pos = get_pos();
@@ -25,6 +53,6 @@ Vector2f Ball::next_pos()
 
 void Ball::update()
 {
-	Entity::rotate_deg(1.0f);
+	Entity::rotate_deg(rotation_velocity);
 	Entity::set_pos(next_pos());
 }

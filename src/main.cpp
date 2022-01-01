@@ -42,10 +42,10 @@ int main(int argc, char* args[])
 	SDL_Rect ball_inf = {0, 0, 16, 16};
 	SDL_Texture* paddle_t = window.load_texture("res/images/paddle.png");
 	SDL_Rect paddle_inf = {0, 0, 32, 128};
-	// SDL_Texture* barrier_t = window.load_texture("res/images/barrier.png");
-	// SDL_Rect barrier_inf = {0, 0, 64, 64};
-	// SDL_Texture* barrier_large_t = window.load_texture("res/images/barrier.png");
-	// SDL_Rect barrier_large_inf = {0, 0, 128, 128};
+	SDL_Texture* barrier_t = window.load_texture("res/images/barrier.png");
+	SDL_Rect barrier_inf = {0, 0, 64, 64};
+	SDL_Texture* barrier_large_t = window.load_texture("res/images/barrier.png");
+	SDL_Rect barrier_large_inf = {0, 0, 128, 128};
 
 	vector<Entity> entities = {};
 
@@ -60,14 +60,20 @@ int main(int argc, char* args[])
 		Paddle(Vector2f(utils::display_width() - (50 + 2 * paddle_inf.w), utils::display_height()/2), Vector2f(2, 2), paddle_t, paddle_inf)
 	};
 
-	vector<Barrier> barriers = {};
+	vector<Barrier> barriers = {
+		Barrier(Vector2f(utils::display_width()/2 - barrier_large_inf.w/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_inf),
+		Barrier(Vector2f(utils::display_width()/2 - barrier_large_inf.w/2, utils::display_height() - barrier_large_inf.h), Vector2f(1, 1), barrier_large_t, barrier_large_inf),
+		
+		Barrier(Vector2f(utils::display_width()/3 - barrier_inf.w/2, utils::display_height()/3 - barrier_inf.h/2), Vector2f(1, 1), barrier_t, barrier_inf),
+		Barrier(Vector2f(2 * utils::display_width()/3 - barrier_inf.w/2, 2 * utils::display_height()/3 - barrier_inf.h/2), Vector2f(1, 1), barrier_t, barrier_inf)
+	};
 
 
 	bool game_running = true;
 
 	SDL_Event event;
 
-	const float delta_time = .01;
+	const float time_step = .01;
 	float accumulator = 0.0f;
 	float current_time = utils::hire_time_in_seconds();
 
@@ -80,7 +86,7 @@ int main(int argc, char* args[])
 		current_time = new_time;
 		accumulator += frame_time;
 
-		while(accumulator >= delta_time)
+		while(accumulator >= time_step)
 		{
 			while(SDL_PollEvent(&event))
 			{
@@ -88,10 +94,11 @@ int main(int argc, char* args[])
 					game_running = false;
 			}
 
-			accumulator -= delta_time;
+			accumulator -= time_step;
 
 		}
 		// const float alpha = accumulator / deltaTime;
+		// const flota delta_time;
 		
 
 		window.clear();
@@ -145,16 +152,28 @@ int main(int argc, char* args[])
 			{
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_paddle.get_border_box()))
 				{
+					if(temp_ball.get_velocity().x >= 0)
+						temp_ball.set_rotation_direction(1);
+					else
+						temp_ball.set_rotation_direction(0);
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(-1, 1));
 					was_x_reversed = true;
 				}
 				if(!was_y_reversed && game_math::rect_collide(test_updown, temp_paddle.get_border_box()))
 				{
+					temp_ball.reverse_rotation_direction();
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(1, -1));
 					was_y_reversed = true;
 				}
 				if(!was_x_reversed && !was_y_reversed && game_math::rect_collide(test_corner, temp_paddle.get_border_box()))
 				{
+					temp_ball.reverse_rotation_direction();
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(-1, -1));
 					was_x_reversed = true;
 					was_y_reversed = true;
@@ -165,16 +184,28 @@ int main(int argc, char* args[])
 			{
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_barrier.get_border_box()))
 				{
+					if(temp_ball.get_velocity().x >= 0)
+						temp_ball.set_rotation_direction(1);
+					else
+						temp_ball.set_rotation_direction(0);
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(-1, 1));
 					was_x_reversed = true;
 				}
 				if(!was_y_reversed && game_math::rect_collide(test_updown, temp_barrier.get_border_box()))
 				{
+					temp_ball.reverse_rotation_direction();
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(1, -1));
 					was_y_reversed = true;
 				}
 				if(!was_x_reversed && !was_y_reversed && game_math::rect_collide(test_corner, temp_barrier.get_border_box()))
 				{
+					temp_ball.reverse_rotation_direction();
+					temp_ball.random_rotation_velocity();
+
 					temp_ball.scale_velocity(Vector2f(-1, -1));
 					was_x_reversed = true;
 					was_y_reversed = true;

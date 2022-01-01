@@ -15,11 +15,19 @@ public:
 	inline void set_velocity(Vector2f const &p_velocity){velocity = p_velocity;}
 	void scale_velocity(Vector2f const &p_scale);
 
+	inline float get_rotation_velocity(){return rotation_velocity;}
+	void random_rotation_velocity();
+	void set_rotation_direction(int const &direction);
+	int get_rotation_direction();
+	inline void reverse_rotation_direction(){rotation_velocity *= -1;}
+
+
 	Vector2f next_pos();
 	
 	void update();
 
 private:
 	Vector2f velocity;
+	float rotation_velocity;
 
 };
