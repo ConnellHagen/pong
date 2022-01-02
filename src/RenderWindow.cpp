@@ -45,19 +45,26 @@ void RenderWindow::clear()
 	SDL_RenderClear(renderer);
 }
 	
+/*
+render_mode (determines what part of the rectangle (x,y) is)
+|1-2-3|
+|4-5-6|
+|7-8-9|
+*/
 void RenderWindow::render(Entity p_entity)
 {
+
 	SDL_Rect src;
 	src.x = p_entity.get_original_image().x;
 	src.y = p_entity.get_original_image().y;
 	src.w = p_entity.get_original_image().w;
 	src.h = p_entity.get_original_image().h;
 
-	SDL_Rect dst;
-	dst.x = p_entity.get_pos().x * universal_scalar.x;
-	dst.y = p_entity.get_pos().y * universal_scalar.y;
-	dst.w = p_entity.get_original_image().w * universal_scalar.x * p_entity.get_scale().x;
-	dst.h = p_entity.get_original_image().h * universal_scalar.y * p_entity.get_scale().y;
+	SDL_Rect dst = p_entity.get_border_box();
+	dst.x *= universal_scalar.x;
+	dst.y *= universal_scalar.y;
+	dst.w *= universal_scalar.x;
+	dst.h *= universal_scalar.y;
 
 	SDL_RenderCopyEx(renderer, p_entity.get_texture(), &src, &dst, static_cast<double>(p_entity.get_angle()), NULL, SDL_FLIP_NONE);
 }

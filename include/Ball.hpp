@@ -9,7 +9,7 @@
 class Ball : public Entity
 {
 public:
-	Ball(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata);
+	Ball(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata, const int& p_render_mode);
 
 	inline Vector2f get_velocity(){return velocity;}
 	inline void set_velocity(Vector2f const &p_velocity){velocity = p_velocity;}

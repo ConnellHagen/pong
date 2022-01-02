@@ -27,7 +27,7 @@ int main(int argc, char* args[])
 
 
 	SDL_Rect canvas_inf = {0, 0, utils::display_width(), utils::display_height()};
- 	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf);
+ 	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, 1);
 
 	RenderWindow window("Game Title", utils::display_width(), utils::display_height(), Vector2f(1, 1));
 
@@ -51,22 +51,24 @@ int main(int argc, char* args[])
 
 	vector<Ball> balls =
 	{
-		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf)
+		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, 1)
 	};
 
 	vector<Paddle> paddles =
 	{
-		Paddle(Vector2f(50, utils::display_height()/2), Vector2f(2, 2), paddle_t, paddle_inf),
-		Paddle(Vector2f(utils::display_width() - (50 + 2 * paddle_inf.w), utils::display_height()/2), Vector2f(2, 2), paddle_t, paddle_inf)
+		Paddle(Vector2f(50, utils::display_height()/2 - paddle_inf.h), Vector2f(2, 2), paddle_t, paddle_inf, 1),
+		Paddle(Vector2f(utils::display_width() - (50 + 2 * paddle_inf.w), utils::display_height()/2 - paddle_inf.h), Vector2f(2, 2), paddle_t, paddle_inf, 1)
 	};
 
 	vector<Barrier> barriers = {
-		Barrier(Vector2f(utils::display_width()/2 - barrier_large_inf.w/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_inf),
-		Barrier(Vector2f(utils::display_width()/2 - barrier_large_inf.w/2, utils::display_height() - barrier_large_inf.h), Vector2f(1, 1), barrier_large_t, barrier_large_inf),
-		
-		Barrier(Vector2f(utils::display_width()/3 - barrier_inf.w/2, utils::display_height()/3 - barrier_inf.h/2), Vector2f(1, 1), barrier_t, barrier_inf),
-		Barrier(Vector2f(2 * utils::display_width()/3 - barrier_inf.w/2, 2 * utils::display_height()/3 - barrier_inf.h/2), Vector2f(1, 1), barrier_t, barrier_inf)
+		Barrier(Vector2f(utils::display_width()/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_inf, 2),
+		Barrier(Vector2f(utils::display_width()/2, utils::display_height()), Vector2f(1, 1), barrier_large_t, barrier_large_inf, 8),
+		Barrier(Vector2f(utils::display_width()/3, utils::display_height()/3), Vector2f(1, 1), barrier_t, barrier_inf, 5),
+		Barrier(Vector2f(utils::display_width()*2/3, utils::display_height()*2/3), Vector2f(1, 1), barrier_t, barrier_inf, 5)
 	};
+
+	//W, S, UP, DOWN
+	vector<bool> key_pushes(4, false);
 
 
 	bool game_running = true;
@@ -90,8 +92,54 @@ int main(int argc, char* args[])
 		{
 			while(SDL_PollEvent(&event))
 			{
-				if(event.type == SDL_QUIT)
-					game_running = false;
+				switch(event.type)
+				{
+					case SDL_QUIT:
+						game_running = false;
+						break;
+
+					case SDL_KEYDOWN:
+						switch (event.key.keysym.sym)
+						{
+						    case SDLK_w:
+						    	key_pushes[0] = true;
+						    	break;
+
+						    case SDLK_s:
+						    	key_pushes[1] = true;
+						    	break;
+
+						    case SDLK_UP:
+							    key_pushes[2] = true;
+							    break;
+
+						    case SDLK_DOWN:
+							    key_pushes[3] = true;
+							    break;
+						}
+						break;
+
+					case SDL_KEYUP:
+						switch (event.key.keysym.sym)
+						{
+							case SDLK_w:
+						    	key_pushes[0] = false;
+						    	break;
+
+						    case SDLK_s:
+						    	key_pushes[1] = false;
+						    	break;
+
+						    case SDLK_UP:
+							    key_pushes[2] = false;
+							    break;
+							    
+						    case SDLK_DOWN:
+							    key_pushes[3] = false;
+							    break;
+						}
+						break;
+				}
 			}
 
 			accumulator -= time_step;
@@ -217,6 +265,20 @@ int main(int argc, char* args[])
 
 		}
 
+		if(key_pushes[0])
+			paddles[0].set_direction(1);
+		else if(key_pushes[1])
+			paddles[0].set_direction(2);
+		else
+			paddles[0].set_direction(0);
+		
+		if(key_pushes[2])
+			paddles[1].set_direction(1);
+		else if(key_pushes[3])
+			paddles[1].set_direction(2);
+		else
+			paddles[1].set_direction(0);
+			
 		for(Paddle& temp_paddle : paddles)
 		{
 			temp_paddle.update();
