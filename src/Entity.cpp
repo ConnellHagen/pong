@@ -12,6 +12,13 @@ void Entity::set_pos(const Vector2f& p_pos)
 	build_border_box();
 }
 
+Vector2f Entity::get_center()
+{
+	float temp_x = border_box.x + border_box.w/2;
+	float temp_y = border_box.y + border_box.h/2;
+	return Vector2f(temp_x, temp_y);
+}
+
 void Entity::set_scale(const float& p_w, const float& p_h)
 {
 	scale = Vector2f(p_w, p_h);

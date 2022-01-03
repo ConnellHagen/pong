@@ -12,6 +12,7 @@ public:
 	Entity(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode);
 
 	inline Vector2f get_pos(){return pos;}
+	Vector2f get_center();
 	void set_pos(const Vector2f& p_pos);
 
 	inline float get_angle(){return angle;}

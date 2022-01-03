@@ -148,7 +148,7 @@ int main(int argc, char* args[])
 
 		}
 		// const float alpha = accumulator / deltaTime;
-		// const flota delta_time;
+		// const float delta_time;
 		
 
 		window.clear();
@@ -201,7 +201,7 @@ int main(int argc, char* args[])
 			for(Paddle& temp_paddle : paddles)
 			{
 
-				float percent_from_center = game_math::clamp((temp_paddle.get_pos().y - temp_ball.get_pos().y) / (temp_paddle.get_border_box().h / 2.0f) * 100, -100, 100);
+				float percent_from_center = game_math::clamp((temp_paddle.get_center().y - temp_ball.get_center().y) / (temp_paddle.get_border_box().h / 2.0f) * 100, -100, 100);
 
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_paddle.get_border_box()))
 				{
@@ -239,6 +239,11 @@ int main(int argc, char* args[])
 
 			for(Barrier& temp_barrier : barriers)
 			{
+				float distance_from_xcenter = abs(temp_ball.get_center().x - temp_barrier.get_center().x);
+				float distance_from_ycenter = abs(temp_ball.get_center().y - temp_barrier.get_center().y);
+				// float percent_from_center_y = game_math::clamp(distance_from_ycenter / (temp_barrier.get_border_box().h / 2.0f) * 100, -100, 100);
+				// float percent_from_center_x = game_math::clamp(distance_from_xcenter / (temp_barrier.get_border_box().w / 2.0f) * 100, -100, 100);
+
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_barrier.get_border_box()))
 				{
 					if(temp_ball.get_velocity().x >= 0)
@@ -263,9 +268,23 @@ int main(int argc, char* args[])
 					temp_ball.reverse_rotation_direction();
 					temp_ball.random_rotation_velocity();
 
-					temp_ball.scale_velocity(Vector2f(-1, -1));
-					was_x_reversed = true;
-					was_y_reversed = true;
+					if(distance_from_xcenter == distance_from_ycenter)
+					{
+						temp_ball.scale_velocity(Vector2f(-1, -1));
+						was_x_reversed = true;
+						was_y_reversed = true;
+					}
+					else if(distance_from_xcenter > distance_from_ycenter)
+					{
+						temp_ball.scale_velocity(Vector2f(-1, 1));
+						was_x_reversed = true;
+					}
+					else
+					{
+						temp_ball.scale_velocity(Vector2f(1, -1));
+						was_y_reversed = true;
+					}
+
 				}
 			}
 
