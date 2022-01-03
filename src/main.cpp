@@ -313,9 +313,20 @@ int main(int argc, char* args[])
 				ball_next.y += temp_ball.get_velocity().y;
 
 				if(temp_paddle.get_direction() == 1 && game_math::rect_collide(ball_next, test_up))
+				{
+					temp_paddle.set_direction(2);
+					temp_paddle.update();
+					temp_paddle.set_direction(1);
 					dont_update = true;
+				}
 				if(temp_paddle.get_direction() == 2 && game_math::rect_collide(ball_next, test_down))
+				{
+					temp_paddle.set_direction(1);
+					temp_paddle.update();
+					temp_paddle.set_direction(2);
 					dont_update = true;
+				}
+
 			}
 
 			if(!dont_update)
