@@ -27,7 +27,7 @@ int main(int argc, char* args[])
 
 
 	SDL_Rect canvas_inf = {0, 0, utils::display_width(), utils::display_height()};
- 	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, 1);
+ 	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, canvas_inf, 1);
 
 	RenderWindow window("Game Title", utils::display_width(), utils::display_height(), Vector2f(1, 1));
 
@@ -44,27 +44,29 @@ int main(int argc, char* args[])
 	SDL_Rect paddle_inf = {0, 0, 32, 128};
 	SDL_Texture* barrier_t = window.load_texture("res/images/barrier.png");
 	SDL_Rect barrier_inf = {0, 0, 64, 64};
-	SDL_Texture* barrier_large_t = window.load_texture("res/images/barrier.png");
+	SDL_Rect barrier_infsheet = {0, 0, 256, 128};
+	SDL_Texture* barrier_large_t = window.load_texture("res/images/barrier_large.png");
 	SDL_Rect barrier_large_inf = {0, 0, 128, 128};
+	SDL_Rect barrier_large_infsheet = {0, 0, 512, 256};
 
 	vector<Entity> entities = {};
 
 	vector<Ball> balls =
 	{
-		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, 1)
+		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5)
 	};
 
 	vector<Paddle> paddles =
 	{
-		Paddle(Vector2f(50, utils::display_height()/2 - paddle_inf.h), Vector2f(2, 2), paddle_t, paddle_inf, 1),
-		Paddle(Vector2f(utils::display_width() - (50 + 2 * paddle_inf.w), utils::display_height()/2 - paddle_inf.h), Vector2f(2, 2), paddle_t, paddle_inf, 1)
+		Paddle(Vector2f(50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 4),
+		Paddle(Vector2f(utils::display_width() - 50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 6)
 	};
 
 	vector<Barrier> barriers = {
-		Barrier(Vector2f(utils::display_width()/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_inf, 2),
-		Barrier(Vector2f(utils::display_width()/2, utils::display_height()), Vector2f(1, 1), barrier_large_t, barrier_large_inf, 8),
-		Barrier(Vector2f(utils::display_width()/3, utils::display_height()/3), Vector2f(1, 1), barrier_t, barrier_inf, 5),
-		Barrier(Vector2f(utils::display_width()*2/3, utils::display_height()*2/3), Vector2f(1, 1), barrier_t, barrier_inf, 5)
+		Barrier(Vector2f(utils::display_width()/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_infsheet, barrier_large_inf, 2),
+		Barrier(Vector2f(utils::display_width()/2, utils::display_height()), Vector2f(1, 1), barrier_large_t, barrier_large_infsheet, barrier_large_inf, 8),
+		Barrier(Vector2f(utils::display_width()/3, utils::display_height()/3), Vector2f(1, 1), barrier_t, barrier_infsheet, barrier_inf, 5),
+		Barrier(Vector2f(utils::display_width()*2/3, utils::display_height()*2/3), Vector2f(1, 1), barrier_t, barrier_infsheet, barrier_inf, 5)
 	};
 
 	//W, S, UP, DOWN
@@ -198,6 +200,9 @@ int main(int argc, char* args[])
 
 			for(Paddle& temp_paddle : paddles)
 			{
+
+				float percent_from_center = game_math::clamp((temp_paddle.get_pos().y - temp_ball.get_pos().y) / (temp_paddle.get_border_box().h / 2.0f) * 100, -100, 100);
+
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_paddle.get_border_box()))
 				{
 					if(temp_ball.get_velocity().x >= 0)
@@ -205,6 +210,8 @@ int main(int argc, char* args[])
 					else
 						temp_ball.set_rotation_direction(0);
 					temp_ball.random_rotation_velocity();
+
+					temp_ball.bounce_y_velocity(percent_from_center);
 
 					temp_ball.scale_velocity(Vector2f(-1, 1));
 					was_x_reversed = true;
@@ -221,6 +228,8 @@ int main(int argc, char* args[])
 				{
 					temp_ball.reverse_rotation_direction();
 					temp_ball.random_rotation_velocity();
+
+					temp_ball.bounce_y_velocity(percent_from_center);
 
 					temp_ball.scale_velocity(Vector2f(-1, -1));
 					was_x_reversed = true;
@@ -260,7 +269,6 @@ int main(int argc, char* args[])
 				}
 			}
 
-
 			temp_ball.update();
 
 		}
@@ -281,7 +289,37 @@ int main(int argc, char* args[])
 			
 		for(Paddle& temp_paddle : paddles)
 		{
-			temp_paddle.update();
+			const SDL_Rect paddle_hitbox = temp_paddle.get_border_box();
+
+			Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y);
+			Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h);
+
+			if(temp_paddle.get_direction() == 1 && !canvas.is_point_within(corner_top))
+				continue;
+			if(temp_paddle.get_direction() == 2 && !canvas.is_point_within(corner_bottom))
+				continue;
+
+			SDL_Rect test_up = temp_paddle.get_border_box();
+			test_up.y -= 6;
+			SDL_Rect test_down = temp_paddle.get_border_box();
+			test_down.y += 6;
+
+			bool dont_update = false;
+
+			for(Ball& temp_ball : balls)
+			{
+				SDL_Rect ball_next = temp_ball.get_border_box();
+				ball_next.x += temp_ball.get_velocity().x;
+				ball_next.y += temp_ball.get_velocity().y;
+
+				if(temp_paddle.get_direction() == 1 && game_math::rect_collide(ball_next, test_up))
+					dont_update = true;
+				if(temp_paddle.get_direction() == 2 && game_math::rect_collide(ball_next, test_down))
+					dont_update = true;
+			}
+
+			if(!dont_update)
+				temp_paddle.update();
 		}
 
 		for(Barrier& temp_barrier : barriers)

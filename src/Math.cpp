@@ -10,3 +10,12 @@ bool game_math::rect_collide(SDL_Rect rect1, SDL_Rect rect2)
     else
     	return false;
 }	
+
+float game_math::clamp(const float& number, const float& clamp1, const float& clamp2)
+{
+    if(clamp1 <= number && number <= clamp2)
+        return number;
+    if(number < clamp1)
+        return clamp1;
+    return clamp2;
+}

@@ -1,10 +1,17 @@
 #include "Barrier.hpp"
 
-Barrier::Barrier(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata, const int& p_render_mode)
-	:Entity(p_pos, p_scale, p_texture, p_imgdata, p_render_mode)
+Barrier::Barrier(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)
+	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode)
 {
-	Entity::set_original_image(p_imgdata);
 }
 
 void Barrier::update()
-{}
+{
+	if(frame_timer >= 10)
+	{
+		Entity::next_sprite_frame();
+		frame_timer = -1;
+	}
+	
+	frame_timer++;
+}

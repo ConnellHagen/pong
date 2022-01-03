@@ -25,5 +25,6 @@ struct Vector2f
 
 namespace game_math
 {
-	bool rect_collide(SDL_Rect rect1, SDL_Rect rect2);	
+	bool rect_collide(SDL_Rect rect1, SDL_Rect rect2);
+	float clamp(const float& number, const float& clamp1, const float& clamp2);
 }

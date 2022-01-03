@@ -9,9 +9,10 @@
 class Paddle : public Entity
 {
 public:
-	Paddle(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect const &p_imgdata, const int& p_render_mode);
+	Paddle(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode);
 
-	inline void set_direction(int const &p_direction){direction = p_direction;}
+	inline void set_direction(const int& p_direction){direction = p_direction;}
+	inline int get_direction(){return direction;}
 
 	Vector2f next_pos();
 

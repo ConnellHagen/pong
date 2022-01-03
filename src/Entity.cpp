@@ -1,18 +1,18 @@
 #include "Entity.hpp"
 
-Entity::Entity(Vector2f const &p_pos, Vector2f const &p_scale, SDL_Texture* const &p_texture, SDL_Rect p_imgdata, const int& p_render_mode)
-	:original_img(p_imgdata), texture(p_texture), pos(p_pos), scale(p_scale), render_mode(p_render_mode)
+Entity::Entity(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)
+	:sprite_sheet(p_sheet), current_sprite_frame(p_current), texture(p_texture), pos(p_pos), scale(p_scale), render_mode(p_render_mode)
 {
 	build_border_box();
 }
 
-void Entity::set_pos(Vector2f const &p_pos)
+void Entity::set_pos(const Vector2f& p_pos)
 {
 	pos = p_pos;
 	build_border_box();
 }
 
-void Entity::set_scale(float const &p_w, float const &p_h)
+void Entity::set_scale(const float& p_w, const float& p_h)
 {
 	scale = Vector2f(p_w, p_h);
 	build_border_box();
@@ -21,7 +21,7 @@ void Entity::set_scale(float const &p_w, float const &p_h)
 
 void Entity::build_border_box()
 {
-	SDL_Rect new_border = original_img;
+	SDL_Rect new_border = current_sprite_frame;
 	new_border.x = pos.x;
 	new_border.y = pos.y;
 	new_border.w *= scale.x;
@@ -32,39 +32,56 @@ void Entity::build_border_box()
 		case 1:
 			break;
 		case 2:
-			new_border.x -= original_img.w/2 * scale.x;
+			new_border.x -= current_sprite_frame.w/2 * scale.x;
 			break;
 		case 3:
-			new_border.x -= original_img.w * scale.x;
+			new_border.x -= current_sprite_frame.w * scale.x;
 			break;
 		case 4:
-			new_border.y -= original_img.h/2 * scale.y;
+			new_border.y -= current_sprite_frame.h/2 * scale.y;
 			break;
 		case 5:
-			new_border.x -= original_img.w/2 * scale.x;
-			new_border.y -= original_img.h/2 * scale.y;
+			new_border.x -= current_sprite_frame.w/2 * scale.x;
+			new_border.y -= current_sprite_frame.h/2 * scale.y;
 			break;
 		case 6:
-			new_border.x -= original_img.w * scale.x;
-			new_border.y -= original_img.h/2 * scale.y;
+			new_border.x -= current_sprite_frame.w * scale.x;
+			new_border.y -= current_sprite_frame.h/2 * scale.y;
 			break;
 		case 7:
-			new_border.y -= original_img.h * scale.y;
+			new_border.y -= current_sprite_frame.h * scale.y;
 			break;
 		case 8:
-			new_border.x -= original_img.w/2 * scale.x;
-			new_border.y -= original_img.h * scale.y;
+			new_border.x -= current_sprite_frame.w/2 * scale.x;
+			new_border.y -= current_sprite_frame.h * scale.y;
 			break;
 		case 9:
-			new_border.x -= original_img.w * scale.x;
-			new_border.y -= original_img.h * scale.y;
+			new_border.x -= current_sprite_frame.w * scale.x;
+			new_border.y -= current_sprite_frame.h * scale.y;
 			break;
 	}
 
 	border_box = new_border;
 }
 
-bool Entity::is_point_within(Vector2f const &point)
+void Entity::next_sprite_frame()
+{
+	if(current_sprite_frame.x + current_sprite_frame.h == sprite_sheet.w)
+	{
+		if(current_sprite_frame.y + current_sprite_frame.h == sprite_sheet.h)
+		{
+			current_sprite_frame.x = 0;
+			current_sprite_frame.y = 0;
+			return;
+		}
+		current_sprite_frame.x = 0;
+		current_sprite_frame.y += current_sprite_frame.h;
+		return;
+	}
+	current_sprite_frame.x += current_sprite_frame.w;
+}
+
+bool Entity::is_point_within(const Vector2f& point)
 {
 	if(!(point.x >= border_box.x && point.x < border_box.x + border_box.w))
 		return false;

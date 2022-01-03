@@ -55,10 +55,10 @@ void RenderWindow::render(Entity p_entity)
 {
 
 	SDL_Rect src;
-	src.x = p_entity.get_original_image().x;
-	src.y = p_entity.get_original_image().y;
-	src.w = p_entity.get_original_image().w;
-	src.h = p_entity.get_original_image().h;
+	src.x = p_entity.get_sprite_frame().x;
+	src.y = p_entity.get_sprite_frame().y;
+	src.w = p_entity.get_sprite_frame().w;
+	src.h = p_entity.get_sprite_frame().h;
 
 	SDL_Rect dst = p_entity.get_border_box();
 	dst.x *= universal_scalar.x;
