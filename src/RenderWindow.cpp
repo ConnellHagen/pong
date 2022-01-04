@@ -35,11 +35,6 @@ int RenderWindow::get_refresh_rate()
 	return mode.refresh_rate;
 }
 
-void RenderWindow::clean_up()
-{
-	SDL_DestroyWindow(window);
-}
-
 void RenderWindow::clear()
 {
 	SDL_RenderClear(renderer);
@@ -98,4 +93,9 @@ void RenderWindow::render(Background p_background)
 void RenderWindow::display()
 {
 	SDL_RenderPresent(renderer);
+}
+
+void RenderWindow::clean_up()
+{
+	SDL_DestroyWindow(window);
 }

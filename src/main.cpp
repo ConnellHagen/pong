@@ -229,11 +229,41 @@ int main(int argc, char* args[])
 					temp_ball.reverse_rotation_direction();
 					temp_ball.random_rotation_velocity();
 
+					float dy0 = abs(temp_ball.get_center().y - temp_paddle.get_edge_center(0).y);
+					float dy1 = abs(temp_ball.get_center().y - temp_paddle.get_edge_center(1).y);
+					float dx = abs(temp_ball.get_center().x - temp_paddle.get_edge_center(0).x);
+
+					if(dy0 < dy1)
+					{
+						if(dy0 >= dx)
+						{
+							temp_ball.scale_velocity(Vector2f(-1, -1));
+							was_x_reversed = true;
+							was_y_reversed = true;
+						}
+						else
+						{
+							temp_ball.scale_velocity(Vector2f(-1, 1));
+							was_x_reversed = true;
+						}
+					}
+					else
+					{
+						if(dy1 >= dx)
+						{
+							temp_ball.scale_velocity(Vector2f(-1, -1));
+							was_x_reversed = true;
+							was_y_reversed = true;
+						}
+						else
+						{
+							temp_ball.scale_velocity(Vector2f(-1, 1));
+							was_x_reversed = true;
+						}
+					}
+
 					temp_ball.bounce_y_velocity(percent_from_center);
 
-					temp_ball.scale_velocity(Vector2f(-1, -1));
-					was_x_reversed = true;
-					was_y_reversed = true;
 				}
 			}
 
@@ -241,8 +271,6 @@ int main(int argc, char* args[])
 			{
 				float distance_from_xcenter = abs(temp_ball.get_center().x - temp_barrier.get_center().x);
 				float distance_from_ycenter = abs(temp_ball.get_center().y - temp_barrier.get_center().y);
-				// float percent_from_center_y = game_math::clamp(distance_from_ycenter / (temp_barrier.get_border_box().h / 2.0f) * 100, -100, 100);
-				// float percent_from_center_x = game_math::clamp(distance_from_xcenter / (temp_barrier.get_border_box().w / 2.0f) * 100, -100, 100);
 
 				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_barrier.get_border_box()))
 				{

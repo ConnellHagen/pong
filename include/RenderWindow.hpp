@@ -14,7 +14,7 @@ public:
 	RenderWindow(const char* p_title, int p_w, int p_h, Vector2f p_scalar);
 	int get_refresh_rate();
 	SDL_Texture* load_texture(const char* p_filePath);
-	void clean_up();
+
 	void clear();
 
 	void render(Entity p_entity);
@@ -25,6 +25,8 @@ public:
 
 	inline void set_universal_scalar(Vector2f const &scale){universal_scalar = scale;}
 	inline Vector2f get_universal_scalar(){return universal_scalar;}
+	
+	void clean_up();
 
 private:
 	SDL_Window* window;

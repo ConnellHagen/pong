@@ -22,7 +22,6 @@ public:
 	int get_rotation_direction();
 	inline void reverse_rotation_direction(){rotation_velocity *= -1;}
 
-
 	Vector2f next_pos();
 	
 	void update();
