@@ -2,16 +2,17 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "RenderWindow.hpp"
 #include "Entity.hpp"
-#include "Paddle.hpp"
-#include "Ball.hpp"
-#include "Tile.hpp"
-#include "Barrier.hpp"
-
 #include "Math.hpp"
 #include "utils.hpp"
+
+#include "Paddle.hpp"
+#include "Barrier.hpp"
+#include "Ball.hpp"
+#include "Tile.hpp"
 
 using std::vector;
 
@@ -157,228 +158,17 @@ int main(int argc, char* args[])
 		//updating
 		for(Ball& temp_ball : balls)
 		{
-
-			bool was_x_reversed = false;
-			bool was_y_reversed = false;
-
-			const SDL_Rect ball_hitbox = temp_ball.get_border_box();
-
-			Vector2f corner_tl(ball_hitbox.x, ball_hitbox.y);
-			Vector2f corner_tr(ball_hitbox.x + ball_hitbox.w, ball_hitbox.y);
-			Vector2f corner_bl(ball_hitbox.x, ball_hitbox.y + ball_hitbox.h);
-			Vector2f corner_br(ball_hitbox.x + ball_hitbox.w, ball_hitbox.y + ball_hitbox.h);
-
-			if(!was_x_reversed && !canvas.is_point_within(corner_tl) && !canvas.is_point_within(corner_bl))
-			{
-				temp_ball.scale_velocity(Vector2f(-1, 1));
-				was_x_reversed = true;
-			}
-			else if(!was_x_reversed && !canvas.is_point_within(corner_tr) && !canvas.is_point_within(corner_br))
-			{
-				temp_ball.scale_velocity(Vector2f(-1, 1));
-				was_x_reversed = true;
-			}
-			if(!was_y_reversed && !canvas.is_point_within(corner_tl) && !canvas.is_point_within(corner_tr))
-			{
-				temp_ball.scale_velocity(Vector2f(1, -1));
-				was_y_reversed = true;
-			}
-			else if(!was_y_reversed && !canvas.is_point_within(corner_bl) && !canvas.is_point_within(corner_br))
-			{
-				temp_ball.scale_velocity(Vector2f(1, -1));
-				was_y_reversed = true;
-			}
-
-
-			SDL_Rect test_leftright = ball_hitbox;
-			test_leftright.x += temp_ball.get_velocity().x;
-			SDL_Rect test_updown = ball_hitbox;
-			test_updown.y += temp_ball.get_velocity().y;
-			SDL_Rect test_corner = ball_hitbox;
-			test_corner.x += temp_ball.get_velocity().x;
-			test_corner.y += temp_ball.get_velocity().y;
-
-			for(Paddle& temp_paddle : paddles)
-			{
-
-				float percent_from_center = game_math::clamp((temp_paddle.get_center().y - temp_ball.get_center().y) / (temp_paddle.get_border_box().h / 2.0f) * 100, -100, 100);
-
-				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_paddle.get_border_box()))
-				{
-					if(temp_ball.get_velocity().x >= 0)
-						temp_ball.set_rotation_direction(1);
-					else
-						temp_ball.set_rotation_direction(0);
-					temp_ball.random_rotation_velocity();
-
-					temp_ball.bounce_y_velocity(percent_from_center);
-
-					temp_ball.scale_velocity(Vector2f(-1, 1));
-					was_x_reversed = true;
-				}
-				if(!was_y_reversed && game_math::rect_collide(test_updown, temp_paddle.get_border_box()))
-				{
-					temp_ball.reverse_rotation_direction();
-					temp_ball.random_rotation_velocity();
-
-					temp_ball.scale_velocity(Vector2f(1, -1));
-					was_y_reversed = true;
-				}
-				if(!was_x_reversed && !was_y_reversed && game_math::rect_collide(test_corner, temp_paddle.get_border_box()))
-				{
-					temp_ball.reverse_rotation_direction();
-					temp_ball.random_rotation_velocity();
-
-					float dy0 = abs(temp_ball.get_center().y - temp_paddle.get_edge_center(0).y);
-					float dy1 = abs(temp_ball.get_center().y - temp_paddle.get_edge_center(1).y);
-					float dx = abs(temp_ball.get_center().x - temp_paddle.get_edge_center(0).x);
-
-					if(dy0 < dy1)
-					{
-						if(dy0 >= dx)
-						{
-							temp_ball.scale_velocity(Vector2f(-1, -1));
-							was_x_reversed = true;
-							was_y_reversed = true;
-						}
-						else
-						{
-							temp_ball.scale_velocity(Vector2f(-1, 1));
-							was_x_reversed = true;
-						}
-					}
-					else
-					{
-						if(dy1 >= dx)
-						{
-							temp_ball.scale_velocity(Vector2f(-1, -1));
-							was_x_reversed = true;
-							was_y_reversed = true;
-						}
-						else
-						{
-							temp_ball.scale_velocity(Vector2f(-1, 1));
-							was_x_reversed = true;
-						}
-					}
-
-					temp_ball.bounce_y_velocity(percent_from_center);
-
-				}
-			}
-
-			for(Barrier& temp_barrier : barriers)
-			{
-				float distance_from_xcenter = abs(temp_ball.get_center().x - temp_barrier.get_center().x);
-				float distance_from_ycenter = abs(temp_ball.get_center().y - temp_barrier.get_center().y);
-
-				if(!was_x_reversed && game_math::rect_collide(test_leftright, temp_barrier.get_border_box()))
-				{
-					if(temp_ball.get_velocity().x >= 0)
-						temp_ball.set_rotation_direction(1);
-					else
-						temp_ball.set_rotation_direction(0);
-					temp_ball.random_rotation_velocity();
-
-					temp_ball.scale_velocity(Vector2f(-1, 1));
-					was_x_reversed = true;
-				}
-				if(!was_y_reversed && game_math::rect_collide(test_updown, temp_barrier.get_border_box()))
-				{
-					temp_ball.reverse_rotation_direction();
-					temp_ball.random_rotation_velocity();
-
-					temp_ball.scale_velocity(Vector2f(1, -1));
-					was_y_reversed = true;
-				}
-				if(!was_x_reversed && !was_y_reversed && game_math::rect_collide(test_corner, temp_barrier.get_border_box()))
-				{
-					temp_ball.reverse_rotation_direction();
-					temp_ball.random_rotation_velocity();
-
-					if(distance_from_xcenter == distance_from_ycenter)
-					{
-						temp_ball.scale_velocity(Vector2f(-1, -1));
-						was_x_reversed = true;
-						was_y_reversed = true;
-					}
-					else if(distance_from_xcenter > distance_from_ycenter)
-					{
-						temp_ball.scale_velocity(Vector2f(-1, 1));
-						was_x_reversed = true;
-					}
-					else
-					{
-						temp_ball.scale_velocity(Vector2f(1, -1));
-						was_y_reversed = true;
-					}
-
-				}
-			}
-
-			temp_ball.update();
-
+			temp_ball.update(canvas, paddles, barriers);
 		}
 
-		if(key_pushes[0])
-			paddles[0].set_direction(1);
-		else if(key_pushes[1])
-			paddles[0].set_direction(2);
-		else
-			paddles[0].set_direction(0);
-		
-		if(key_pushes[2])
-			paddles[1].set_direction(1);
-		else if(key_pushes[3])
-			paddles[1].set_direction(2);
-		else
-			paddles[1].set_direction(0);
-			
+		int* key_count = new int(0);
 		for(Paddle& temp_paddle : paddles)
 		{
-			const SDL_Rect paddle_hitbox = temp_paddle.get_border_box();
-
-			Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y);
-			Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h);
-
-			if(temp_paddle.get_direction() == 1 && !canvas.is_point_within(corner_top))
-				continue;
-			if(temp_paddle.get_direction() == 2 && !canvas.is_point_within(corner_bottom))
-				continue;
-
-			SDL_Rect test_up = temp_paddle.get_border_box();
-			test_up.y -= 6;
-			SDL_Rect test_down = temp_paddle.get_border_box();
-			test_down.y += 6;
-
-			bool dont_update = false;
-
-			for(Ball& temp_ball : balls)
-			{
-				SDL_Rect ball_next = temp_ball.get_border_box();
-				ball_next.x += temp_ball.get_velocity().x;
-				ball_next.y += temp_ball.get_velocity().y;
-
-				if(temp_paddle.get_direction() == 1 && game_math::rect_collide(ball_next, test_up))
-				{
-					temp_paddle.set_direction(2);
-					temp_paddle.update();
-					temp_paddle.set_direction(1);
-					dont_update = true;
-				}
-				if(temp_paddle.get_direction() == 2 && game_math::rect_collide(ball_next, test_down))
-				{
-					temp_paddle.set_direction(1);
-					temp_paddle.update();
-					temp_paddle.set_direction(2);
-					dont_update = true;
-				}
-
-			}
-
-			if(!dont_update)
-				temp_paddle.update();
+			std::vector<bool> temp_keys = {key_pushes[*key_count], key_pushes[*key_count + 1]};
+			temp_paddle.update(canvas, balls, temp_keys);
+			*key_count += 2;
 		}
+		delete key_count;
 
 		for(Barrier& temp_barrier : barriers)
 		{

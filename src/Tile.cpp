@@ -1,7 +1,14 @@
 #include <cmath>
 
-#include "Tile.hpp"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <vector>
+
+#include "Math.hpp"
 #include "utils.hpp"
+
+#include "Tile.hpp"
+
 
 Tile::Tile(Vector2f const p_pos, Vector2f const p_scale, SDL_Texture* const p_texture, SDL_Rect const p_imgdata)
 	:texture(p_texture), original_img(p_imgdata), pos(p_pos), scale(p_scale)

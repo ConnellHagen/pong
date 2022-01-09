@@ -1,3 +1,9 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+#include "Entity.hpp"
+#include "Math.hpp"
+
 #include "Barrier.hpp"
 
 Barrier::Barrier(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)

@@ -2,9 +2,14 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 
 #include "Entity.hpp"
+#include "Barrier.hpp"
+
 #include "Math.hpp"
+
+class Paddle;
 
 class Ball : public Entity
 {
@@ -13,8 +18,9 @@ public:
 
 	inline Vector2f get_velocity(){return velocity;}
 	inline void set_velocity(const Vector2f& p_velocity){velocity = p_velocity;}
-	void bounce_y_velocity(const float& percent_off);
+	void bounce_y_velocity(float& percent_off);
 	void scale_velocity(const Vector2f& p_scale);
+	void set_velocity_dir(const Vector2f& p_direction);
 
 	inline float get_rotation_velocity(){return rotation_velocity;}
 	void random_rotation_velocity();
@@ -24,7 +30,7 @@ public:
 
 	Vector2f next_pos();
 	
-	void update();
+	void update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<Barrier>& barrier_list);
 
 private:
 	Vector2f velocity;
