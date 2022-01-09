@@ -1,7 +1,13 @@
 # About
  
-This is a recreation of the Atari game 'Pong' as a practice exercise in creating games using the SDL2 library of c++.
+This is a recreation of the Atari game 'Pong' as a practice exercise in creating games using the SDL2 graphics library of C++.
+
+I have added many features that were not within the capabilities of the original Atari game such as:
+* Animated textures
+* Ball rotations
+* Multiple maps to play on
 
 # Installation
 
-I will not tell you how to do this. This game is in a very rough state and your eyes should not look at it yet :)
+* This project has a long way to go until it is ready for distribution.
+* Kindly look away if you accidently install and run it properly. :)
