@@ -4,18 +4,20 @@
 #include <ctime>
 #include <cmath>
 
-#include "Entity.hpp"
 #include "Math.hpp"
 #include "utils.hpp"
 
-#include "Paddle.hpp"
-#include "Barrier.hpp"
-#include "Ball.hpp"
+#include "Entity.hpp"
+	#include "Barrier.hpp"
+	#include "Paddle.hpp"
+	#include "Ball.hpp"
 
 Ball::Ball(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)
 	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode), net_velocity(6)
 {
-	velocity = Vector2f(net_velocity, 0);
+	velocity = Vector2f(utils::random(-1, 0), utils::random(-3, 3));
+	update_x_velocity();
+	random_rotation_velocity();
 }
 
 void Ball::bounce_y_velocity(float& p_percent_off)
@@ -71,8 +73,7 @@ void Ball::set_velocity_dir(const Vector2f& p_direction)
 void Ball::random_rotation_velocity()
 {
 	bool is_negative = rotation_velocity < 0;
-	srand((unsigned int) time (NULL));
-    rotation_velocity = rand() % 7 + 1;
+    rotation_velocity = utils::random(1, 7);
     if(is_negative)
     	rotation_velocity *= -1;
 }
@@ -102,7 +103,7 @@ Vector2f Ball::next_pos()
 	return new_pos;
 }
 
-void Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list)
+int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list)
 {
 
 	for(Paddle& temp_paddle : paddle_list)
@@ -620,15 +621,19 @@ void Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<B
 	if(canvas.is_point_within(ball_corners[3]))
 		bottom_left_canvas = true;
 
+	int goal_scored = 0;
+
 	if(!top_left_canvas && !bottom_left_canvas)
 	{
 		Entity::set_pos(Vector2f(border_box.w/2, get_pos().y));
 		scale_velocity(Vector2f(-1, 1));
+		goal_scored = 2;
 	}
 	else if(!top_right_canvas && !bottom_right_canvas)
 	{
 		Entity::set_pos(Vector2f(utils::display_width() - border_box.w/2, get_pos().y));
 		scale_velocity(Vector2f(-1, 1));
+		goal_scored = 1;
 	}
 	if(!top_left_canvas && !top_right_canvas)
 	{
@@ -645,5 +650,7 @@ void Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<B
 	Entity::rotate_deg(rotation_velocity);
 	
 	Entity::set_pos(next_pos());
+
+	return goal_scored;
 
 }

@@ -14,6 +14,7 @@
 
 #include "utils.hpp"
 #include "Game.hpp"
+#include "GUI.hpp"
 
 using std::vector;
 
@@ -27,14 +28,16 @@ int main(int argc, char* args[])
 	if(!(IMG_Init(IMG_INIT_PNG)))
 		std::cout << "IMG_Init has failed. Error: " << SDL_GetError() << "\n";
 
-	RenderWindow window = RenderWindow("Game Title", utils::display_width(), utils::display_height(), Vector2f(1, 1));
+	RenderWindow window("Pong", utils::display_width(), utils::display_height(), Vector2f(1, 1));
 
 	SDL_Rect canvas_inf = {0, 0, utils::display_width(), utils::display_height()};
-	Entity canvas = Entity(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, canvas_inf, 1);
+	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, canvas_inf, 1);
 
 	//W, S, UP, DOWN
-	std::vector<bool> key_pushes = std::vector<bool>(4, false);
-	
+	std::vector<bool> key_pushes(4, false);
+
+
+	//GUI gui();
 	Game current_game(1, 5, window);
 
 
@@ -120,53 +123,18 @@ int main(int argc, char* args[])
 
 		window.clear();
 
+		//current_game.get_score().print();
+
 
 		//updating
-		for(Ball& temp_ball : current_game.get_ball_list())
-		{
-			temp_ball.update(canvas, current_game.get_paddle_list(), current_game.get_barrier_list());
-		}
-
-		int* key_count = new int(0);
-		for(Paddle& temp_paddle : current_game.get_paddle_list())
-		{
-			std::vector<bool> temp_keys = {key_pushes[*key_count], key_pushes[*key_count + 1]};
-			temp_paddle.update(canvas, current_game.get_ball_list(), temp_keys);
-			*key_count += 2;
-		}
-		delete key_count;
-
-		for(Barrier& temp_barrier : current_game.get_barrier_list())
-		{
-			temp_barrier.update();
-		}
-
+		current_game.update(canvas, key_pushes);
+		
 		//rendering
-		window.render(current_game.get_background());
-
-		for(Entity& temp_entity : current_game.get_entity_list())
-		{
-			window.render(temp_entity);
-		}
-
-		for(Ball& temp_ball : current_game.get_ball_list())
-		{
-			window.render(static_cast<Entity>(temp_ball));
-		}
-
-		for(Paddle& temp_paddle : current_game.get_paddle_list())
-		{
-			window.render(static_cast<Entity>(temp_paddle));
-		}
-
-		for(Barrier& temp_barrier : current_game.get_barrier_list())
-		{
-			window.render(static_cast<Entity>(temp_barrier));
-		}
-
+		current_game.render(window);
 
 		//displaying
 		window.display();
+
 
 		int frame_ticks = SDL_GetTicks() - start_ticks;
 

@@ -2,9 +2,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "Game.hpp"
 #include "Math.hpp"
 #include "RenderWindow.hpp"
-#include "Game.hpp"
 #include "utils.hpp"
 
 #include "Entity.hpp"
@@ -37,7 +37,7 @@ Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
 	init_barrier_list();
 	init_background();
 }
-	
+
 Game::~Game()
 {}
 
@@ -82,8 +82,93 @@ void Game::init_background()
 	background = Background(Vector2f(4, 4), background_t, background_inf);
 }
 
-void Game::add_score(Vector2i& score_add)
+void Game::add_score(Vector2i score_add)
 {
 	score.x += score_add.x;
 	score.y += score_add.y;
+}
+
+void Game::respawn_ball(int ball_index)
+{
+	ball_list.erase(ball_list.begin() + ball_index);
+	ball_respawn_timers.push_back(Timer(200.0f));
+
+	
+}
+
+void Game::update_timers()
+{
+	for(int i = 0; (unsigned)i < ball_respawn_timers.size(); i++)
+	{
+		ball_respawn_timers[i].decrement();
+		if(ball_respawn_timers[i].is_timer_done())
+		{
+			ball_list.push_back(Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5));
+			ball_respawn_timers.erase(ball_respawn_timers.begin() + i);
+			i--;
+		}
+	}
+}
+
+void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
+{
+	update_timers();
+
+	int ball_index = 0;
+	for(Ball& temp_ball : ball_list)
+	{
+		const int goal = temp_ball.update(canvas, paddle_list, barrier_list);
+		switch(goal)
+		{
+			case 1:
+				add_score(Vector2i(1, 0));
+				respawn_ball(ball_index);
+				break;
+			case 2:
+				add_score(Vector2i(0, 1));
+				respawn_ball(ball_index);
+				break;
+		}
+		ball_index++;
+	}
+
+
+	int* key_count = new int(0);
+	for(Paddle& temp_paddle : paddle_list)
+	{
+		std::vector<bool> temp_keys = {key_pushes[*key_count], key_pushes[*key_count + 1]};
+		temp_paddle.update(canvas, ball_list, temp_keys);
+		*key_count += 2;
+	}
+	delete key_count;
+
+	for(Barrier& temp_barrier : barrier_list)
+	{
+		temp_barrier.update();
+	}
+}
+
+void Game::render(RenderWindow& window)
+{
+	window.render(background);
+
+	for(Entity& temp_entity : entity_list)
+	{
+		window.render(temp_entity);
+	}
+
+	for(Ball& temp_ball : ball_list)
+	{
+		window.render(static_cast<Entity>(temp_ball));
+	}
+
+	for(Paddle& temp_paddle : paddle_list)
+	{
+		window.render(static_cast<Entity>(temp_paddle));
+	}
+
+	for(Barrier& temp_barrier : barrier_list)
+	{
+		window.render(static_cast<Entity>(temp_barrier));
+	}
 }

@@ -36,10 +36,17 @@ public:
 	inline Background& get_background(){return background;}
 
 	inline Vector2i get_score(){return score;}
-	void add_score(Vector2i& score_add);
+	void add_score(Vector2i score_add);
+
+	void respawn_ball(int ball_index);
+	void update_timers();
 
 	// 0: no winner, 1: left winner, 2: right winner
 	bool winner();
+
+	void update(Entity& canvas, const std::vector<bool>& key_pushes);
+
+	void render(RenderWindow& window);
 
 
 	SDL_Texture* background_t;
@@ -60,11 +67,13 @@ private:
 	int current_map;
 	Vector2i score;
 	int score_to_win;
+	int ball_respawns_left = 0;
 
 	Background background;
 	std::vector<Entity> entity_list;
 	std::vector<Ball> ball_list;
 	std::vector<Paddle> paddle_list;
 	std::vector<Barrier> barrier_list;
+	std::vector<Timer> ball_respawn_timers;
 
 };

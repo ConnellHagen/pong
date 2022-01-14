@@ -24,49 +24,6 @@ Vector2f Entity::get_center()
 	return Vector2f(temp_x, temp_y);
 }
 
-// the lowest set of coords are the 0 box_num, highest set of coords are the 1 box_num
-Vector2f Entity::get_edge_center(const int& box_num)
-{
-	// 0 for horizontal, 1 for vertical
-	int mode;
-	if(border_box.h >= border_box.w)
-		mode = 1;
-	else
-		mode = 0;
-
-	Vector2f edge_center(border_box.x, border_box.y);
-
-	if(mode == 0)
-	{
-		if(box_num == 0)
-		{
-			edge_center.x += border_box.h/2;
-			edge_center.y += border_box.h/2;
-		}
-		else
-		{
-			edge_center.x += (border_box.w - border_box.h/2);
-			edge_center.y += border_box.h/2;
-		}
-	}
-	else if(mode == 1)
-	{
-		if(box_num == 0)
-		{
-			edge_center.x += border_box.w/2;
-			edge_center.y += border_box.w/2;
-		}
-		else
-		{
-			edge_center.x += border_box.w/2;
-			edge_center.y += (border_box.h - border_box.w/2);
-		}
-	}
-	
-	return edge_center;
-
-}
-
 void Entity::set_scale(const float& p_w, const float& p_h)
 {
 	scale = Vector2f(p_w, p_h);

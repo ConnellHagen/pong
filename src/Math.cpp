@@ -57,3 +57,8 @@ float game_math::distance(Vector2f point1, Vector2f point2)
     float distance = sqrt(x_comp + y_comp);
     return distance;
 }
+
+Timer::Timer(const float& p_time)
+{
+    time = p_time;
+}

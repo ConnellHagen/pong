@@ -15,6 +15,8 @@ struct TextButton
 class GUI
 {
 public:
+	GUI();
+
 	inline int get_current_scene(){return current_scene;}
 	inline void set_current_scene(const int& scene){current_scene = scene;}
 

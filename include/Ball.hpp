@@ -4,10 +4,12 @@
 #include <SDL2/SDL_image.h>
 #include <vector>
 
-#include "Entity.hpp"
-#include "Barrier.hpp"
-
 #include "Math.hpp"
+
+#include "Entity.hpp"
+	#include "Barrier.hpp"
+	#include "Paddle.hpp"
+	#include "Ball.hpp"
 
 class Paddle;
 
@@ -30,7 +32,7 @@ public:
 
 	Vector2f next_pos();
 	
-	void update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list);
+	int update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list);
 
 private:
 	Vector2f velocity;

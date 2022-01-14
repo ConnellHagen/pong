@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <ctime>
+#include <cmath>
 
 
 namespace utils
@@ -22,6 +24,12 @@ namespace utils
 	inline int display_height()
 	{
 		return 720;
+	}
+
+	inline int random(const int& lower, const int& upper)
+	{
+		srand((unsigned int) time (NULL));
+    	return rand() % (upper - lower + 1) + lower;
 	}
 
 }

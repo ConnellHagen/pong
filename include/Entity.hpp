@@ -13,10 +13,8 @@ public:
 
 	inline Vector2f get_pos(){return pos;}
 	void set_pos(const Vector2f& p_pos);
+	
 	Vector2f get_center();
-
-	// the center of a square box created on the edge of a non-square object. ex: [_|________|_]
-	Vector2f get_edge_center(const int& box_num);
 
 	inline float get_angle(){return angle;}
 	inline void set_angle(const float& p_angle){angle = p_angle;}
