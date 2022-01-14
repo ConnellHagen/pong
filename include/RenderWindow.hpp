@@ -4,11 +4,10 @@
 #include <SDL2/SDL_image.h>
 
 #include "Math.hpp"
-#include "Entity.hpp"
-
 #include "Tile.hpp"
-#include "Ball.hpp"
-#include "Paddle.hpp"
+#include "Entity.hpp"
+	#include "Ball.hpp"
+	#include "Paddle.hpp"
 
 class RenderWindow
 {

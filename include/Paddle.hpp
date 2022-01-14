@@ -23,7 +23,7 @@ public:
 
 	Vector2f next_pos();
 
-	void update(Entity& canvas, std::vector<Ball>& ball_list, std::vector<bool>& key_pushes);
+	void update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes);
 
 private:
 	//0 for still, 1 for up, 2 for down

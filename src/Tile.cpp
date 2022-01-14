@@ -32,6 +32,9 @@ Background::Background(Vector2f const p_scale, SDL_Texture* const p_texture, SDL
 	make_tile_list();
 }
 
+Background::Background()
+{}
+
 void Background::make_tile_list()
 {
 	tile_list.clear();

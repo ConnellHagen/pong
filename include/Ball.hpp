@@ -30,7 +30,7 @@ public:
 
 	Vector2f next_pos();
 	
-	void update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<Barrier>& barrier_list);
+	void update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list);
 
 private:
 	Vector2f velocity;

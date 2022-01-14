@@ -102,9 +102,7 @@ Vector2f Ball::next_pos()
 	return new_pos;
 }
 
-
-//the skipping over corners problem is a problem with the detection of what triangles are intersected, not the bouncing algorithm.
-void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<Barrier>& barrier_list)
+void Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list)
 {
 
 	for(Paddle& temp_paddle : paddle_list)
@@ -313,15 +311,14 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 		}
 
 		//regular edge cases
-		else if(intersect_1)
+		else if(intersect_1 || (intersect_2 && velocity.x > 0 && velocity.y > 0) || (intersect_4 && velocity.x < 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(get_pos().x, pad_border_box.y - border_box.h/2));
 			scale_velocity(Vector2f(1, -1));
 
 			random_rotation_velocity();
-
 		}
-		else if(intersect_2)
+		else if(intersect_2 || (intersect_1 && velocity.x < 0 && velocity.y < 0) || (intersect_3 && velocity.x < 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(
 				pad_border_box.x + pad_border_box.w + border_box.w/2,
@@ -329,21 +326,19 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 			));
 			scale_velocity(Vector2f(-1, 1));
 
-
 			float percent_from_center = 100 * game_math::clamp(2 * abs(temp_paddle.get_center().y - get_pos().y) / temp_paddle.get_border_box().h, 0, 1);
 			set_rotation_direction(1);
 			random_rotation_velocity();
 			bounce_y_velocity(percent_from_center);
 		}
-		else if(intersect_3)
+		else if(intersect_3 || (intersect_2 && velocity.x > 0 && velocity.y < 0) || (intersect_4 && velocity.x < 0 && velocity.y < 0))
 		{
 			Entity::set_pos(Vector2f(get_pos().x, pad_border_box.y + pad_border_box.h + border_box.h/2));
 			scale_velocity(Vector2f(1, -1));
 
 			random_rotation_velocity();
-
 		}
-		else if(intersect_4)
+		else if(intersect_4 || (intersect_1 && velocity.x > 0 && velocity.y < 0) || (intersect_3 && velocity.x > 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(pad_border_box.x - border_box.w/2, get_pos().y));
 			scale_velocity(Vector2f(-1, 1));
@@ -370,13 +365,13 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 			Vector2f(border_box.x + velocity.x, border_box.y + border_box.h + velocity.y)
 		};
 
-		// paddle corners
+		// Barrier corners
 		Vector2f top_left(bar_border_box.x, bar_border_box.y);
 		Vector2f top_right(bar_border_box.x + bar_border_box.w, bar_border_box.y);
 		Vector2f bottom_right(bar_border_box.x + bar_border_box.w, bar_border_box.y + bar_border_box.h);
 		Vector2f bottom_left(bar_border_box.x, bar_border_box.y + bar_border_box.h);
 
-		// sub-triangles of the rectangle (paddle's border box) - splits it like an X (for doing math later)
+		// sub-triangles of the rectangle (Barrier's border box) - splits it like an X (for doing math later)
 		Triangle top(temp_barrier.get_center(), top_left, top_right);
 		Triangle right(temp_barrier.get_center(), top_right, bottom_right);
 		Triangle bottom(temp_barrier.get_center(), bottom_right, bottom_left);
@@ -402,7 +397,7 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 				intersect_4 = true;
 		}
 
-		//unlikely outlier cases, but necessary for if some paddle resize tomfoolery occurs
+		//unlikely outlier cases, but necessary for if some barrier resize tomfoolery occurs
 		if(intersect_1 && intersect_2 && intersect_3)
 		{
 			//bounces off right
@@ -563,17 +558,14 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 		}
 
 		//regular edge cases
-		else if(intersect_1)
+		else if(intersect_1 || (intersect_2 && velocity.x > 0 && velocity.y > 0) || (intersect_4 && velocity.x < 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(get_pos().x, bar_border_box.y - border_box.h/2));
 			scale_velocity(Vector2f(1, -1));
-			
-			float percent_from_center = 100 * game_math::clamp(2 * abs(temp_barrier.get_center().x - get_pos().x) / temp_barrier.get_border_box().w, 0, 1);
-			random_rotation_velocity();
-			bounce_y_velocity(percent_from_center);
 
+			random_rotation_velocity();
 		}
-		else if(intersect_2)
+		else if(intersect_2 || (intersect_1 && velocity.x < 0 && velocity.y < 0) || (intersect_3 && velocity.x < 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(
 				bar_border_box.x + bar_border_box.w + border_box.w/2,
@@ -581,23 +573,19 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 			));
 			scale_velocity(Vector2f(-1, 1));
 
-
 			float percent_from_center = 100 * game_math::clamp(2 * abs(temp_barrier.get_center().y - get_pos().y) / temp_barrier.get_border_box().h, 0, 1);
 			set_rotation_direction(1);
 			random_rotation_velocity();
 			bounce_y_velocity(percent_from_center);
 		}
-		else if(intersect_3)
+		else if(intersect_3 || (intersect_2 && velocity.x > 0 && velocity.y < 0) || (intersect_4 && velocity.x < 0 && velocity.y < 0))
 		{
 			Entity::set_pos(Vector2f(get_pos().x, bar_border_box.y + bar_border_box.h + border_box.h/2));
 			scale_velocity(Vector2f(1, -1));
 
-			float percent_from_center = 100 * game_math::clamp(2 * abs(temp_barrier.get_center().x - get_pos().x) / temp_barrier.get_border_box().w, 0, 1);
 			random_rotation_velocity();
-			bounce_y_velocity(percent_from_center);
-
 		}
-		else if(intersect_4)
+		else if(intersect_4 || (intersect_1 && velocity.x > 0 && velocity.y < 0) || (intersect_3 && velocity.x > 0 && velocity.y > 0))
 		{
 			Entity::set_pos(Vector2f(bar_border_box.x - border_box.w/2, get_pos().y));
 			scale_velocity(Vector2f(-1, 1));
@@ -607,6 +595,7 @@ void Ball::update(Entity& canvas, std::vector<Paddle>& paddle_list, std::vector<
 			random_rotation_velocity();
 			bounce_y_velocity(percent_from_center);
 		}
+
 	}
 
 	//canvas

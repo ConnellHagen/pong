@@ -24,6 +24,24 @@ struct Vector2f
 
 };
 
+struct Vector2i
+{
+	Vector2i()
+	:x(0), y(0)
+	{}
+
+	Vector2i(const int& p_x, const int& p_y)
+	:x(p_x), y(p_y)
+	{}
+
+	void print()
+	{
+		std::cout << x << ", " << y << "\n";
+	}
+
+	int x, y;
+};
+
 struct Triangle
 {
 	Triangle(const Vector2f& p_point1, const Vector2f& p_point2, const Vector2f& p_point3)

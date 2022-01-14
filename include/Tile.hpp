@@ -32,6 +32,7 @@ class Background
 {
 public:
 	Background(Vector2f const p_scale, SDL_Texture* const p_texture, SDL_Rect const p_imgdata);
+	Background();
 
 	void make_tile_list();
 

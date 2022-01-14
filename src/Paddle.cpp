@@ -29,7 +29,7 @@ Vector2f Paddle::next_pos()
 	return new_pos;
 }
 
-void Paddle::update(Entity& canvas, std::vector<Ball>& ball_list, std::vector<bool>& key_pushes)
+void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes)
 {
 	bool is_UP = key_pushes[0];
 	bool is_DOWN = key_pushes[1];
