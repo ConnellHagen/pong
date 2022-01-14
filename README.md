@@ -7,6 +7,12 @@ I have added many features that were not within the capabilities of the original
 * Ball rotations
 * Multiple maps to play on
 
+# Preview
+
+![pong](https://user-images.githubusercontent.com/72321241/149447878-0e6c0fde-0531-4659-99a7-cc6f83dd24ed.png)
+
+This is just the prototype in the current phase of development. This is subject to change
+
 # Installation
 
 * This project has a long way to go until it is ready for distribution.
