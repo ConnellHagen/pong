@@ -133,14 +133,13 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
 	}
 
 
-	int* key_count = new int(0);
+	int key_count = 0;
 	for(Paddle& temp_paddle : paddle_list)
 	{
-		std::vector<bool> temp_keys = {key_pushes[*key_count], key_pushes[*key_count + 1]};
+		std::vector<bool> temp_keys = {key_pushes[key_count], key_pushes[key_count + 1]};
 		temp_paddle.update(canvas, ball_list, temp_keys);
-		*key_count += 2;
+		key_count += 2;
 	}
-	delete key_count;
 
 	for(Barrier& temp_barrier : barrier_list)
 	{

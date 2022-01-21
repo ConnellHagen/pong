@@ -21,12 +21,14 @@ using std::vector;
 int main(int argc, char* args[])
 {
 	if(SDL_Init(SDL_INIT_VIDEO) > 0)
-	{
-		std::cout << "SDL_Init has failed. SDL_ERROR: " << SDL_GetError() << "\n";
-	}
-
+		std::cout << "SDL_Init has failed. Error " << SDL_GetError() << "\n";
+	
 	if(!(IMG_Init(IMG_INIT_PNG)))
 		std::cout << "IMG_Init has failed. Error: " << SDL_GetError() << "\n";
+
+	if(!(TTF_Init()))
+		std::cout << "TTF_Init has failed. Error: " << SDL_GetError() << "\n";
+
 
 	RenderWindow window("Pong", utils::display_width(), utils::display_height(), Vector2f(1, 1));
 

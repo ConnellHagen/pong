@@ -2,12 +2,14 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "Math.hpp"
 #include "Tile.hpp"
 #include "Entity.hpp"
 	#include "Ball.hpp"
 	#include "Paddle.hpp"
+#include "GUI.hpp"
 
 class RenderWindow
 {
@@ -19,8 +21,11 @@ public:
 	void clear();
 
 	void render(Entity p_entity);
-	void render(Tile p_tile);
 	void render(Background p_background);
+	void render(Tile p_tile);
+	void render(GUI p_gui);
+	void render(Text p_text);
+	void render(TextButton p_text);
 
 	void display();
 
