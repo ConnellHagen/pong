@@ -4,19 +4,18 @@
 #include <vector>
 #include <cmath>
 
+#include "utils.hpp"
 #include "RenderWindow.hpp"
 #include "Math.hpp"
+
 #include "Entity.hpp"
 	#include "Paddle.hpp"
 	#include "Barrier.hpp"
 	#include "Ball.hpp"
 #include "Tile.hpp"
-
-#include "utils.hpp"
 #include "Game.hpp"
-#include "GUI.hpp"
 
-using std::vector;
+#include "GUI.hpp"
 
 int main(int argc, char* args[])
 {
@@ -26,7 +25,7 @@ int main(int argc, char* args[])
 	if(!(IMG_Init(IMG_INIT_PNG)))
 		std::cout << "IMG_Init has failed. Error: " << SDL_GetError() << "\n";
 
-	if(!(TTF_Init()))
+	if(TTF_Init() != 0)
 		std::cout << "TTF_Init has failed. Error: " << SDL_GetError() << "\n";
 
 
@@ -39,8 +38,14 @@ int main(int argc, char* args[])
 	std::vector<bool> key_pushes(4, false);
 
 
-	//GUI gui();
+	GUI gui(window);
+
 	Game current_game(1, 5, window);
+
+
+
+	//garbage for testing
+	// Text test_text(window.get_renderer(), std::string("res/fonts/DenseLetters.ttf"), 70, SDL_Color{255, 255, 128}, std::string("Hello World"), Vector2f(100, 200));
 
 
 
@@ -125,14 +130,16 @@ int main(int argc, char* args[])
 
 		window.clear();
 
-		//current_game.get_score().print();
-
 
 		//updating
 		current_game.update(canvas, key_pushes);
+
 		
-		//rendering
+		// rendering
 		current_game.render(window);
+		gui.render(window);
+		//SDL_RenderCopyEx(window.get_renderer(), test_text.texture, &test_text.src, &test_text.border_box, 0, NULL, SDL_FLIP_NONE);
+
 
 		//displaying
 		window.display();

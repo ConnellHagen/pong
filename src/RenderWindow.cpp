@@ -1,14 +1,15 @@
 #include <iostream>
+#include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
 #include "Math.hpp"
-#include "Entity.hpp"
-
 #include "Tile.hpp"
-#include "Ball.hpp"
-#include "Paddle.hpp"
+#include "Entity.hpp"
+	#include "Ball.hpp"
+	#include "Paddle.hpp"
+#include "Text.hpp"
 
 #include "RenderWindow.hpp"
 
@@ -51,7 +52,7 @@ void RenderWindow::clear()
 }
 	
 /*
-render_mode (determines what part of the rectangle (x,y) is)
+render_mode determines what part of the rectangle (x,y) is (corner, edge or center)
 |1-2-3|
 |4-5-6|
 |7-8-9|
@@ -100,63 +101,24 @@ void RenderWindow::render(Tile p_tile)
 	SDL_RenderCopy(renderer, p_tile.get_texture(), &src, &dst);
 }
 
-void RenderWindow::render(GUI p_gui)
+// void RenderWindow::render(GUI& p_gui)
+// {
+// 	std::cout << p_gui.get_text_list().size() << "\n";
+
+// 	for(Text& text : p_gui.get_text_list())
+// 	{
+// 		render(text);
+// 	}
+
+// 	// for(TextButton& text : p_gui.get_text_button_list(scene))
+// 	// {
+// 	// 	render(text);
+// 	// }
+// }
+
+void RenderWindow::render(Text& p_text)
 {
-	const int scene = p_gui.get_current_scene();
-	for(Text& text : p_gui.get_text_list(scene))
-	{
-		render(text);
-	}
-
-	for(TextButton& text : p_gui.get_text_button_list(scene))
-	{
-		render(text);
-	}
-}
-
-void RenderWindow::render(Text p_text)
-{
-	SDL_Surface* surface = TTF_RenderText_Solid(p_text.font, p_text.text, p_text.color);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	SDL_Rect src = {0, 0, 0, 0};
-	src.w = surface -> w;
-	src.h = surface -> h;
-
-	SDL_Rect dst = {0, 0, 0, 0};
-	dst.x = p_text.position.x;
-	dst.y = p_text.position.y;
-	dst.w = surface -> w;
-	dst.h = surface -> h;
-
-	SDL_FreeSurface(surface);
-
-
-	SDL_RenderCopyEx(renderer, texture, &src, &dst, 0, NULL, SDL_FLIP_NONE);
-
-	SDL_DestroyTexture(texture);
-}
-
-void RenderWindow::render(TextButton p_text)
-{
-	SDL_Surface* surface = TTF_RenderText_Solid(p_text.font, p_text.text, p_text.get_active_color());
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	SDL_Rect src = {0, 0, 0, 0};
-	src.w = surface -> w;
-	src.h = surface -> h;
-
-	SDL_Rect dst = {0, 0, 0, 0};
-	dst.x = p_text.position.x;
-	dst.y = p_text.position.y;
-	dst.w = surface -> w;
-	dst.h = surface -> h;
-
-	SDL_FreeSurface(surface);
-
-	SDL_RenderCopyEx(renderer, texture, &src, &dst, 0, NULL, SDL_FLIP_NONE);
-
-	SDL_DestroyTexture(texture);
+	SDL_RenderCopyEx(renderer, p_text.texture, &p_text.src, &p_text.border_box, 0, NULL, SDL_FLIP_NONE);
 }
 	
 void RenderWindow::display()

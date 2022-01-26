@@ -1,39 +1,47 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <string>
 #include <vector>
+
+#include "Math.hpp"
+#include "RenderWindow.hpp"
+#include "Text.hpp"
 
 #include "GUI.hpp"
 
-void GUI::add_text(const int& scene, const Text& p_text)
+GUI::GUI(RenderWindow& window)
 {
-	text_list[scene].push_back(p_text);
+	init_text_list(window);
+}
+GUI::~GUI()
+{
+
 }
 
-void GUI::add_text_button(const int& scene, const TextButton& p_text)
+void GUI::init_text_list(RenderWindow& window)
 {
-	text_button_list[scene].push_back(p_text);
+	text_list.clear();
+
+	text_list.push_back(Text(window.get_renderer(), std::string("res/fonts/DenseLetters.ttf"), 70, SDL_Color{255, 255, 128}, std::string("Hello World"), Vector2f(100, 200)));
 }
 
-Text::Text(char* p_text, const int& p_size, TTF_Font* p_font, const SDL_Color& p_color, const Vector2f& p_position, const int& p_render_mode)
-:text(p_text), size(p_size), font(p_font), color(p_color), position(p_position), render_mode(p_render_mode)
-{}
-
-Text::~Text()
+void GUI::add_text(const Text& p_text)
 {
-	//TTF_CloseFont(font);
+	text_list.push_back(p_text);
 }
 
-TextButton::TextButton(char* p_text, const int& p_size, TTF_Font* p_font, const SDL_Color& p_reg_color, const SDL_Color& p_press_color, const Vector2f& p_position, const int& p_render_mode, const int& p_id)
-:text(p_text), size(p_size), font(p_font), reg_color(p_reg_color), press_color(p_press_color), position(p_position), render_mode(p_render_mode), id(p_id), is_pressed(false)
-{}
-
-TextButton::~TextButton()
+void GUI::render(RenderWindow& window)
 {
-	//TTF_CloseFont(font);
+	for(Text& temp_text : text_list)
+	{
+		window.render(temp_text);
+	}
+
 }
 
-SDL_Color TextButton::get_active_color()
+void GUI::update()
 {
-	return (is_pressed ? reg_color : press_color);
+
 }
+
