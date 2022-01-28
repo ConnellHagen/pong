@@ -29,7 +29,6 @@ public:
 	inline void set_sprite_frame(const SDL_Rect& p_imgdata){current_sprite_frame = p_imgdata;}
 
 	inline SDL_Rect get_border_box(){return border_box;}
-	void build_border_box();
 
 	inline int get_render_mode(){return render_mode;}
 
@@ -48,4 +47,5 @@ private:
 	int render_mode;
 	SDL_Rect border_box;
 
+	void build_border_box();
 };

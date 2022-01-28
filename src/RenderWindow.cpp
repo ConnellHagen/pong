@@ -67,15 +67,15 @@ void RenderWindow::render(Entity p_entity)
 	src.h = p_entity.get_sprite_frame().h;
 
 	SDL_Rect dst = p_entity.get_border_box();
-	dst.x *= universal_scalar.x;
-	dst.y *= universal_scalar.y;
-	dst.w *= universal_scalar.x;
-	dst.h *= universal_scalar.y;
+	// dst.x *= universal_scalar.x;
+	// dst.y *= universal_scalar.y;
+	// dst.w *= universal_scalar.x;
+	// dst.h *= universal_scalar.y;
 
 	SDL_RenderCopyEx(renderer, p_entity.get_texture(), &src, &dst, static_cast<double>(p_entity.get_angle()), NULL, SDL_FLIP_NONE);
 }
 
-void RenderWindow::render(Background p_background)
+void RenderWindow::render(Background& p_background)
 {
 	std::vector<Tile> render_list = p_background.get_tile_list();
 	for(Tile background_tile : render_list)
@@ -84,7 +84,7 @@ void RenderWindow::render(Background p_background)
 	}
 }
 
-void RenderWindow::render(Tile p_tile)
+void RenderWindow::render(Tile& p_tile)
 {
 	SDL_Rect src;
 	src.x = p_tile.get_original_image().x;
@@ -118,7 +118,13 @@ void RenderWindow::render(Tile p_tile)
 
 void RenderWindow::render(Text& p_text)
 {
-	SDL_RenderCopyEx(renderer, p_text.texture, &p_text.src, &p_text.border_box, 0, NULL, SDL_FLIP_NONE);
+	SDL_Rect src = p_text.border_box;;
+	src.x = 0;
+	src.y = 0;
+
+	SDL_Rect* dst = &p_text.border_box;
+
+	SDL_RenderCopyEx(renderer, p_text.texture, &src, dst, 0, NULL, SDL_FLIP_NONE);
 }
 	
 void RenderWindow::display()

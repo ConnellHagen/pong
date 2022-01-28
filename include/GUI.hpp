@@ -12,10 +12,10 @@
 
 struct GUI
 {
-	GUI(RenderWindow& window);
+	GUI(RenderWindow& window, const int& scene);
 	~GUI();
 
-	void init_text_list(RenderWindow& window);
+	void init_text_list(RenderWindow& window, const int& scene);
 
 	void add_text(const Text& p_text);
 

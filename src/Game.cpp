@@ -13,7 +13,7 @@
 	#include "Barrier.hpp"
 #include "Tile.hpp"
 
-
+//Game is the container of `Entity`s and the manager of properties relating to an instance of a game (like score)
 Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
 :current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win)
 {

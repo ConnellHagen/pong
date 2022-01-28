@@ -10,20 +10,34 @@
 
 #include "GUI.hpp"
 
-GUI::GUI(RenderWindow& window)
+//GUI is the container of `Text`, `Button`s and other displayed non-entities.
+GUI::GUI(RenderWindow& window, const int& scene)
 {
-	init_text_list(window);
+	init_text_list(window, scene);
 }
+
 GUI::~GUI()
 {
 
 }
 
-void GUI::init_text_list(RenderWindow& window)
+void GUI::init_text_list(RenderWindow& window, const int& scene)
 {
 	text_list.clear();
 
-	text_list.push_back(Text(window.get_renderer(), std::string("res/fonts/DenseLetters.ttf"), 70, SDL_Color{255, 255, 128}, std::string("Hello World"), Vector2f(100, 200)));
+	std::cout << scene << "\n";
+
+	switch(scene)
+	{
+		case 0:
+		std::cout << "here\n";
+			text_list = 
+			{
+				Text(window.get_renderer(), 5, std::string("res/fonts/DenseLetters.ttf"), 70, SDL_Color{255, 255, 128}, std::string("Hello World"), Vector2f(100, 200))
+			};
+			break;
+	}
+
 }
 
 void GUI::add_text(const Text& p_text)
