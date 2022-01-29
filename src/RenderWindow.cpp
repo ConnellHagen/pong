@@ -118,7 +118,7 @@ void RenderWindow::render(Tile& p_tile)
 
 void RenderWindow::render(Text& p_text)
 {
-	SDL_Rect src = p_text.border_box;;
+	SDL_Rect src = p_text.border_box;
 	src.x = 0;
 	src.y = 0;
 

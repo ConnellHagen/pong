@@ -13,6 +13,7 @@
 	#include "Paddle.hpp"
 	#include "Barrier.hpp"
 #include "Tile.hpp"
+#include "GUI.hpp"
 	
 
 class Game
@@ -75,5 +76,7 @@ private:
 	std::vector<Paddle> paddle_list;
 	std::vector<Barrier> barrier_list;
 	std::vector<Timer> ball_respawn_timers;
+
+	GUI score_board;
 
 };

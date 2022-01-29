@@ -6,6 +6,8 @@
 
 #include "Math.hpp"
 #include "RenderWindow.hpp"
+#include "utils.hpp"
+
 #include "Text.hpp"
 
 #include "GUI.hpp"
@@ -25,16 +27,34 @@ void GUI::init_text_list(RenderWindow& window, const int& scene)
 {
 	text_list.clear();
 
-	std::cout << scene << "\n";
-
 	switch(scene)
 	{
+		//score board
 		case 0:
-		std::cout << "here\n";
 			text_list = 
 			{
-				Text(window.get_renderer(), 5, std::string("res/fonts/DenseLetters.ttf"), 70, SDL_Color{255, 255, 128}, std::string("Hello World"), Vector2f(100, 200))
+				Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{160, 160, 160, 128}, std::string("0 - 0"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f))
 			};
+			break;
+
+		//main menu
+		case 1:
+			break;
+
+		//settings
+		case 2:
+			break;
+
+		//pause menu
+		case 3:
+			break;
+
+		//end screen
+		case 4:
+			break;
+
+		//game settings
+		case 5:
 			break;
 	}
 

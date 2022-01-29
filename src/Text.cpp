@@ -14,7 +14,8 @@ Text::Text(SDL_Renderer* p_renderer, const int& p_render_mode, const std::string
 
 	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
 
-	border_box = SDL_Rect{static_cast<int>(pos.x), static_cast<int>(pos.y), surface->w, surface->h};
+	original_box = SDL_Rect{static_cast<int>(pos.x), static_cast<int>(pos.y), surface->w, surface->h};
+	build_border_box();
 
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
 

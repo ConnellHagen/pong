@@ -38,8 +38,6 @@ int main(int argc, char* args[])
 	std::vector<bool> key_pushes(4, false);
 
 
-	GUI gui(window, 0);
-
 	Game current_game(1, 5, window);
 
 
@@ -128,15 +126,11 @@ int main(int argc, char* args[])
 
 		//updating
 		current_game.update(canvas, key_pushes);
-		gui.update();
 
 		
 		// rendering
 		current_game.render(window);
-		gui.render(window);
-		// gui.text_list[0].resize_font(100);
-		// gui.text_list[0].recolor_font(SDL_Color{20, 70, 150, 128});
-		// gui.text_list[0].change_text(std::string("whats good yo"));
+
 
 		//displaying
 		window.display();

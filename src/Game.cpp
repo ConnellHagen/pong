@@ -1,6 +1,7 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <string>
 
 #include "Game.hpp"
 #include "Math.hpp"
@@ -12,10 +13,11 @@
 	#include "Paddle.hpp"
 	#include "Barrier.hpp"
 #include "Tile.hpp"
+#include "GUI.hpp"
 
 //Game is the container of `Entity`s and the manager of properties relating to an instance of a game (like score)
 Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
-:current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win)
+:current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win), score_board(GUI(window, 0))
 {
 	background_t = window.load_texture("res/images/background.png");
 	ball_t = window.load_texture("res/images/ball.png");
@@ -120,18 +122,35 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
 		const int goal = temp_ball.update(canvas, paddle_list, barrier_list);
 		switch(goal)
 		{
-			case 1:
+			case 1: {
 				add_score(Vector2i(1, 0));
 				respawn_ball(ball_index);
+
+				if(score.x >= score_to_win)
+				{
+					std::cout << "winner x\n";
+				}
+
+				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));
+				score_board.text_list[0].change_text(new_score);
 				break;
-			case 2:
+			}	
+			case 2: {
 				add_score(Vector2i(0, 1));
 				respawn_ball(ball_index);
+
+				if(score.y >= score_to_win)
+				{
+					std::cout << "winner y\n";
+				}
+
+				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));
+				score_board.text_list[0].change_text(new_score);
 				break;
+			}
 		}
 		ball_index++;
 	}
-
 
 	int key_count = 0;
 	for(Paddle& temp_paddle : paddle_list)
@@ -145,11 +164,15 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
 	{
 		temp_barrier.update();
 	}
+
+	score_board.update();
 }
 
 void Game::render(RenderWindow& window)
 {
 	window.render(background);
+
+	score_board.render(window);
 
 	for(Entity& temp_entity : entity_list)
 	{
@@ -170,4 +193,5 @@ void Game::render(RenderWindow& window)
 	{
 		window.render(static_cast<Entity>(temp_barrier));
 	}
+
 }
