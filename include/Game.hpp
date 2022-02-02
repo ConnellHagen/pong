@@ -40,12 +40,12 @@ public:
 	void add_score(Vector2i score_add);
 
 	void respawn_ball(int ball_index);
-	void update_timers();
+	void update_timers(const float& delta_time);
 
 	// 0: no winner, 1: left winner, 2: right winner
 	bool winner();
 
-	void update(Entity& canvas, const std::vector<bool>& key_pushes);
+	void update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time);
 
 	void render(RenderWindow& window);
 

@@ -103,7 +103,7 @@ Vector2f Ball::next_pos()
 	return new_pos;
 }
 
-int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list)
+int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list, const float& delta_time)
 {
 
 	for(Paddle& temp_paddle : paddle_list)

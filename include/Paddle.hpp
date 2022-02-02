@@ -21,9 +21,9 @@ public:
 	inline float get_velocity(){return velocity;}
 	inline void set_velocity(const int& new_vel){velocity = new_vel;}
 
-	Vector2f next_pos();
+	Vector2f next_pos(const float& delta_time);
 
-	void update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes);
+	void update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time);
 
 private:
 	//0 for still, 1 for up, 2 for down

@@ -46,8 +46,8 @@ struct Timer
 {
 	Timer(const float& p_time);
 
-	inline void decrement(){time -= 1;}
-	inline void increase_time(const int& time_add){time += time_add;}
+	inline void decrease(const float& delta_time){time -= delta_time;}
+	inline void increase(const int& time_add){time += time_add;}
 	inline bool is_timer_done(){return time <= 0;}
 
 	float time;

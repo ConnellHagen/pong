@@ -10,9 +10,9 @@ class Barrier : public Entity
 {
 public:
 	Barrier(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode);
-	void update();
+	void update(const float& delta_time);
 
 private:
-	int frame_timer;
+	float frame_timer;
 
 };

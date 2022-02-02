@@ -11,13 +11,14 @@ Barrier::Barrier(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_
 {
 }
 
-void Barrier::update()
+void Barrier::update(const float& delta_time)
 {
-	if(frame_timer >= 10)
+	frame_timer += delta_time;
+
+	if(frame_timer >= .125)
 	{
 		Entity::next_sprite_frame();
-		frame_timer = -1;
+		frame_timer -= .125;
 	}
-	
-	frame_timer++;
+		
 }

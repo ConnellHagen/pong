@@ -9,10 +9,10 @@
 #include "Ball.hpp"
 
 Paddle::Paddle(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)
-	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode), direction(0), velocity(6.0f)
+	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode), direction(0), velocity(280.0f)
 {}
 
-Vector2f Paddle::next_pos()
+Vector2f Paddle::next_pos(const float& delta_time)
 {
 	Vector2f new_pos = get_pos();
 	switch(direction)
@@ -20,16 +20,16 @@ Vector2f Paddle::next_pos()
 		case 0:
 			break;
 		case 1:
-			new_pos.y -= floor(velocity);
+			new_pos.y -= floor(velocity) * delta_time;
 			break;
 		case 2:
-			new_pos.y += floor(velocity);
+			new_pos.y += floor(velocity) * delta_time;
 			break;
 	}
 	return new_pos;
 }
 
-void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes)
+void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time)
 {
 	bool is_UP = key_pushes[0];
 	bool is_DOWN = key_pushes[1];
@@ -50,8 +50,8 @@ void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<boo
 
 	const SDL_Rect paddle_hitbox = get_border_box();
 
-	Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y - floor(get_velocity()));
-	Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h + floor(get_velocity()));
+	Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y - floor(get_velocity()) * delta_time);
+	Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h + floor(get_velocity()) * delta_time);
 
 	if(get_direction() == 1 && !canvas.is_point_within(corner_top))
 		return;
@@ -87,7 +87,7 @@ void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<boo
 
 	if(!dont_update)
 	{
-		Entity::set_pos(next_pos());
+		Entity::set_pos(next_pos(delta_time));
 	}
 	
 }

@@ -47,18 +47,20 @@ int main(int argc, char* args[])
 
 	SDL_Event event;
 
-	const float time_step = .01;
+	const float time_step = .016666;
 	float accumulator = 0.0f;
 	float current_time = utils::hire_time_in_seconds();
 
+	bool updated = false;
+
+	int last_frame_ticks = SDL_GetTicks();
+
 	while(game_running)
 	{
-		int start_ticks = SDL_GetTicks();
-
 		float new_time = utils::hire_time_in_seconds();
-		float frame_time = new_time - current_time;
+		float loop_time = new_time - current_time;
 		current_time = new_time;
-		accumulator += frame_time;
+		accumulator += loop_time;
 
 		while(accumulator >= time_step)
 		{
@@ -116,31 +118,34 @@ int main(int argc, char* args[])
 
 			accumulator -= time_step;
 
+			float current_frame_ticks = SDL_GetTicks();
+			const float delta_time = (current_frame_ticks - last_frame_ticks) / 1000;
+
+			// std::cout << delta_time << "\n";
+
+			//updating
+			current_game.update(canvas, key_pushes, delta_time);
+
+			last_frame_ticks = SDL_GetTicks();
+			updated = true;
 		}
-		// const float alpha = accumulator / deltaTime;
-		// const float delta_time;
-		
+
+		if(!updated)
+		{
+			const float alpha_time = accumulator / time_step;
+			// std::cout << alpha_time << "\n";
+			// interpolation
+		}
 
 		window.clear();
 
-
-		//updating
-		current_game.update(canvas, key_pushes);
-
-		
 		// rendering
 		current_game.render(window);
 
-
-		//displaying
+		// displaying
 		window.display();
 
-
-		int frame_ticks = SDL_GetTicks() - start_ticks;
-
-		if(frame_ticks < 1000 / window.get_refresh_rate())
-			SDL_Delay(1000 / window.get_refresh_rate() - frame_ticks);
-
+		updated = false;
 	}
 
 	window.clean_up();

@@ -51,14 +51,18 @@ void Game::init_entity_list()
 void Game::init_ball_list()
 {
 	ball_list.clear();
-	ball_list.push_back(Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5));
+	ball_list = {
+		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5)
+	};
 }
 
 void Game::init_paddle_list()
 {
 	paddle_list.clear();
-	paddle_list.push_back(Paddle(Vector2f(50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 4));
-	paddle_list.push_back(Paddle(Vector2f(utils::display_width() - 50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 6));
+	paddle_list = {
+		Paddle(Vector2f(50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 4),
+		Paddle(Vector2f(utils::display_width() - 50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 6)
+	};
 	
 }
 
@@ -93,16 +97,14 @@ void Game::add_score(Vector2i score_add)
 void Game::respawn_ball(int ball_index)
 {
 	ball_list.erase(ball_list.begin() + ball_index);
-	ball_respawn_timers.push_back(Timer(200.0f));
-
-	
+	ball_respawn_timers.push_back(Timer(3.0f));
 }
 
-void Game::update_timers()
+void Game::update_timers(const float& delta_time)
 {
 	for(int i = 0; (unsigned)i < ball_respawn_timers.size(); i++)
 	{
-		ball_respawn_timers[i].decrement();
+		ball_respawn_timers[i].decrease(delta_time);
 		if(ball_respawn_timers[i].is_timer_done())
 		{
 			ball_list.push_back(Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5));
@@ -112,14 +114,14 @@ void Game::update_timers()
 	}
 }
 
-void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
+void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time)
 {
-	update_timers();
+	update_timers(delta_time);
 
 	int ball_index = 0;
 	for(Ball& temp_ball : ball_list)
 	{
-		const int goal = temp_ball.update(canvas, paddle_list, barrier_list);
+		const int goal = temp_ball.update(canvas, paddle_list, barrier_list, delta_time);
 		switch(goal)
 		{
 			case 1: {
@@ -156,13 +158,13 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes)
 	for(Paddle& temp_paddle : paddle_list)
 	{
 		std::vector<bool> temp_keys = {key_pushes[key_count], key_pushes[key_count + 1]};
-		temp_paddle.update(canvas, ball_list, temp_keys);
+		temp_paddle.update(canvas, ball_list, temp_keys, delta_time);
 		key_count += 2;
 	}
 
 	for(Barrier& temp_barrier : barrier_list)
 	{
-		temp_barrier.update();
+		temp_barrier.update(delta_time);
 	}
 
 	score_board.update();
