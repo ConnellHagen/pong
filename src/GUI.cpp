@@ -39,6 +39,10 @@ void GUI::init_text_list(RenderWindow& window, const int& scene)
 
 		//main menu
 		case 1:
+			textbutton_list = 
+			{
+				TextButton(Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{220, 220, 220, 255}, std::string("Start"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f)), SDL_Color{250, 250, 100, 255}, SDL_Color{200, 200, 0, 255}, 1)
+			};
 			break;
 
 		//settings
@@ -68,6 +72,11 @@ void GUI::add_text(const Text& p_text)
 void GUI::render(RenderWindow& window)
 {
 	for(Text& temp_text : text_list)
+	{
+		window.render(temp_text);
+	}
+
+	for(TextButton& temp_text : textbutton_list)
 	{
 		window.render(temp_text);
 	}

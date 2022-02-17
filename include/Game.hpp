@@ -22,7 +22,7 @@ public:
 	Game(const int& p_map, const int& p_score_to_win, RenderWindow& window);
 	~Game();
 
-	static void load_textures();
+	//static void load_textures();
 
 	void init_entity_list();
 	void init_ball_list();

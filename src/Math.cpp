@@ -15,7 +15,7 @@ bool Triangle::is_point_within(const Vector2f& point)
     return get_area() == t1.get_area() + t2.get_area() + t3.get_area();
 }
 
-bool game_math::rect_collide(SDL_Rect rect1, SDL_Rect rect2)
+bool game_math::rect_collide(const SDL_Rect& rect1, const SDL_Rect& rect2)
 {
 	if(rect1.x < rect2.x + rect2.w &&
         rect1.x + rect1.w > rect2.x &&
@@ -56,6 +56,11 @@ float game_math::distance(Vector2f point1, Vector2f point2)
     float y_comp = pow((point1.y - point2.y), 2);
     float distance = sqrt(x_comp + y_comp);
     return distance;
+}
+
+bool game_math::contains_point(const SDL_Rect& rect, const Vector2i& point)
+{
+    return point.x >= rect.x && point.x < rect.x + rect.w && point.y >= rect.y && point.y < rect.y + rect.h;
 }
 
 Timer::Timer(const float& p_time)

@@ -39,3 +39,33 @@ public:
 private:
 	void build_border_box();
 };
+
+struct TextButton
+{
+public:
+	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const int& p_ID);
+	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const SDL_Color& p_press_color, const int& p_ID);
+	~TextButton();
+
+	void update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, int* game_scene);
+
+	void set_color(const SDL_Color& p_color);
+
+	inline SDL_Rect get_border_box(){return text.border_box;}
+
+	Text text;
+
+	enum color_state{UNPRESSED = 0, PRESSED = 1, HOVER = 2};
+	color_state current_state;
+
+	SDL_Color default_color;
+	SDL_Color hover_color;
+	SDL_Color press_color;
+
+	int ID;
+
+private:
+	void button_pushed(int* game_scene);
+	void button_released(int* game_scene);
+
+};

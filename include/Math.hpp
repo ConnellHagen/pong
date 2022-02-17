@@ -15,10 +15,7 @@ struct Vector2f
 	:x(p_x), y(p_y)
 	{}
 
-	void print()
-	{
-		std::cout << x << ", " << y << "\n";
-	}
+	inline void print(){std::cout << x << ", " << y << "\n";}
 
 	float x, y;
 
@@ -34,10 +31,7 @@ struct Vector2i
 	:x(p_x), y(p_y)
 	{}
 
-	void print()
-	{
-		std::cout << x << ", " << y << "\n";
-	}
+	inline void print(){std::cout << x << ", " << y << "\n";}
 
 	int x, y;
 };
@@ -67,9 +61,9 @@ struct Triangle
 
 namespace game_math
 {
-	bool rect_collide(SDL_Rect rect1, SDL_Rect rect2);
+	bool rect_collide(const SDL_Rect& rect1, const SDL_Rect& rect2);
+	bool contains_point(const SDL_Rect& rect, const Vector2i& point);
 	float clamp(const float& number, const float& clamp1, const float& clamp2);
 	int lowest_float(std::vector<float>& numbers);
-	int intersect_seg(SDL_Rect rect, const Vector2f& point);
 	float distance(Vector2f point1, Vector2f point2);
 }

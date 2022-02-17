@@ -16,6 +16,7 @@
 #include "Game.hpp"
 
 #include "GUI.hpp"
+#include "Scene.hpp"
 
 int main(int argc, char* args[])
 {
@@ -34,13 +35,19 @@ int main(int argc, char* args[])
 	SDL_Rect canvas_inf = {0, 0, utils::display_width(), utils::display_height()};
 	Entity canvas(Vector2f(0, 0), Vector2f(1, 1), NULL, canvas_inf, canvas_inf, 1);
 
-	//W, S, UP, DOWN
-	std::vector<bool> key_pushes(4, false);
+	//W, S, UP, DOWN, Left Click, Right Click
+	std::vector<bool> key_pushes(6, false);
+	Vector2i mouse_coords;
+
+	int current_scene = 0;
 
 
+	//scene 0
+	Scene main_menu(window, GUI(window, 1));
+	//scene 1
 	Game current_game(1, 5, window);
-
-
+	//scene 2
+	Scene end_screen(window, GUI(window, 4));
 
 
 	bool game_running = true;
@@ -113,6 +120,35 @@ int main(int argc, char* args[])
 							    break;
 						}
 						break;
+
+					case SDL_MOUSEBUTTONDOWN:
+					    switch (event.button.button)
+					    {
+					        case SDL_BUTTON_LEFT:
+					        	key_pushes[4] = true;
+					            break;
+
+					        case SDL_BUTTON_RIGHT:
+					        	key_pushes[5] = true;
+					        	break;
+					    }
+					    break;
+
+					case SDL_MOUSEBUTTONUP:
+					    switch (event.button.button)
+					    {
+					        case SDL_BUTTON_LEFT:
+					        	key_pushes[4] = false;
+					            break;
+					        case SDL_BUTTON_RIGHT:
+					        	key_pushes[5] = false;
+					        	break;
+					    }
+					    break;
+					case SDL_MOUSEMOTION:
+						mouse_coords.x = event.motion.x;
+    					mouse_coords.y = event.motion.y;
+						break;
 				}
 			}
 
@@ -121,10 +157,16 @@ int main(int argc, char* args[])
 			float current_frame_ticks = SDL_GetTicks();
 			const float delta_time = (current_frame_ticks - last_frame_ticks) / 1000;
 
-			// std::cout << delta_time << "\n";
-
 			//updating
-			current_game.update(canvas, key_pushes, delta_time);
+			switch(current_scene)
+			{
+				case 0:
+					main_menu.update(key_pushes, mouse_coords, &current_scene);
+					break;
+				case 1:
+					current_game.update(canvas, key_pushes, delta_time);
+					break;
+			}
 
 			last_frame_ticks = SDL_GetTicks();
 			updated = true;
@@ -132,16 +174,23 @@ int main(int argc, char* args[])
 
 		if(!updated)
 		{
+			//interpolation
 			const float alpha_time = accumulator / time_step;
-			// std::cout << alpha_time << "\n";
-			// interpolation
 		}
 
 		window.clear();
 
 		// rendering
-		current_game.render(window);
-
+		switch(current_scene)
+		{
+			case 0:
+				main_menu.render(window);
+				break;
+			case 1:
+				current_game.render(window);
+				break;
+		}
+		
 		// displaying
 		window.display();
 

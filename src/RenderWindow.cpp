@@ -126,6 +126,11 @@ void RenderWindow::render(Text& p_text)
 
 	SDL_RenderCopyEx(renderer, p_text.texture, &src, dst, 0, NULL, SDL_FLIP_NONE);
 }
+
+void RenderWindow::render(TextButton& p_text)
+{
+	render(p_text.text);
+}
 	
 void RenderWindow::display()
 {
