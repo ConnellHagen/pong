@@ -36,3 +36,16 @@ void Scene::render(RenderWindow& window)
 
 	scene_gui.render(window);
 }
+
+EndScreen::EndScreen(RenderWindow& window, GUI p_scene_gui)
+	:Scene(window, p_scene_gui)
+{
+
+}
+
+void EndScreen::set_winner(const int& p_winner)
+{
+	winner = p_winner;
+	Scene::get_gui().text_list[0].change_text("Player " + std::to_string(winner) + " Wins!");
+
+}

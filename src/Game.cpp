@@ -17,7 +17,7 @@
 
 //Game is the container of `Entity`s and the manager of properties relating to an instance of a game (like score)
 Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
-:current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win), score_board(GUI(window, 0))
+:current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win), winner(0), score_board(GUI(window, 0))
 {
 	background_t = window.load_texture("res/images/background.png");
 	ball_t = window.load_texture("res/images/ball.png");
@@ -114,7 +114,7 @@ void Game::update_timers(const float& delta_time)
 	}
 }
 
-void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time)
+void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time, int* current_scene)
 {
 	update_timers(delta_time);
 
@@ -130,7 +130,8 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const flo
 
 				if(score.x >= score_to_win)
 				{
-					std::cout << "winner x\n";
+					*current_scene = 4;
+					winner = 1;
 				}
 
 				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));
@@ -143,7 +144,8 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const flo
 
 				if(score.y >= score_to_win)
 				{
-					std::cout << "winner y\n";
+					*current_scene = 4;
+					winner = 2;
 				}
 
 				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));

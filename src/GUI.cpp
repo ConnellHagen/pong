@@ -55,6 +55,10 @@ void GUI::init_text_list(RenderWindow& window, const int& scene)
 
 		//end screen
 		case 4:
+			text_list =
+			{
+				Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{220, 220, 220, 255}, std::string("Player 0 Wins!"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f))
+			};
 			break;
 
 		//game settings

@@ -47,7 +47,7 @@ int main(int argc, char* args[])
 	//scene 1
 	Game current_game(1, 5, window);
 	//scene 2
-	Scene end_screen(window, GUI(window, 4));
+	EndScreen end_screen(window, GUI(window, 4));
 
 
 	bool game_running = true;
@@ -164,7 +164,14 @@ int main(int argc, char* args[])
 					main_menu.update(key_pushes, mouse_coords, &current_scene);
 					break;
 				case 1:
-					current_game.update(canvas, key_pushes, delta_time);
+					current_game.update(canvas, key_pushes, delta_time, &current_scene);
+					if(current_game.get_winner() != 0)
+					{
+						end_screen.set_winner(current_game.get_winner());
+					}
+					break;
+				case 4:
+					end_screen.update(key_pushes, mouse_coords, &current_scene);
 					break;
 			}
 
@@ -188,6 +195,13 @@ int main(int argc, char* args[])
 				break;
 			case 1:
 				current_game.render(window);
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				end_screen.render(window);
 				break;
 		}
 		

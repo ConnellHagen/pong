@@ -43,9 +43,9 @@ public:
 	void update_timers(const float& delta_time);
 
 	// 0: no winner, 1: left winner, 2: right winner
-	bool winner();
+	inline int get_winner(){return winner;}
 
-	void update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time);
+	void update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time, int* current_scene);
 
 	void render(RenderWindow& window);
 
@@ -69,6 +69,8 @@ private:
 	Vector2i score;
 	int score_to_win;
 	int ball_respawns_left = 0;
+
+	int winner;
 
 	Background background;
 	std::vector<Entity> entity_list;
