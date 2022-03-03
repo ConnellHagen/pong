@@ -16,16 +16,14 @@
 #include "GUI.hpp"
 
 //Game is the container of `Entity`s and the manager of properties relating to an instance of a game (like score)
-Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
-:current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win), winner(0), score_board(GUI(window, 0))
+Game::Game(RenderWindow& window, Entity* p_canvas, const int& p_map, const int& p_score_to_win)
+:canvas(p_canvas), current_map(p_map), score(Vector2i(0, 0)), score_to_win(p_score_to_win) //, winner(0), score_board(GUI(window))
 {
-	background_t = window.load_texture("res/images/background.png");
 	ball_t = window.load_texture("res/images/ball.png");
 	paddle_t = window.load_texture("res/images/paddle.png");
 	barrier_t = window.load_texture("res/images/barrier.png");
 	barrier_large_t = window.load_texture("res/images/barrier_large.png");
 
-	background_inf = {0, 0, 32, 32};
 	ball_inf = {0, 0, 16, 16};
 	paddle_inf = {0, 0, 32, 128};
 	barrier_inf = {0, 0, 64, 64};
@@ -37,11 +35,18 @@ Game::Game(const int& p_map, const int& p_score_to_win, RenderWindow& window)
 	init_ball_list();
 	init_paddle_list();
 	init_barrier_list();
-	init_background();
 }
 
 Game::~Game()
 {}
+
+void Game::restart_game()
+{
+	init_entity_list();
+	init_ball_list();
+	init_paddle_list();
+	init_barrier_list();
+}
 
 void Game::init_entity_list()
 {
@@ -51,17 +56,31 @@ void Game::init_entity_list()
 void Game::init_ball_list()
 {
 	ball_list.clear();
-	ball_list = {
-		Ball(Vector2f(utils::display_width()/2, utils::display_height()/2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5)
+
+	ball_list =
+	{
+		Ball(
+			Vector2f(utils::display_width()/2, utils::display_height()/2),
+			Vector2f(2, 2),
+			ball_t, ball_inf, ball_inf, 5
+		)
 	};
 }
 
 void Game::init_paddle_list()
 {
 	paddle_list.clear();
-	paddle_list = {
-		Paddle(Vector2f(50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 4),
-		Paddle(Vector2f(utils::display_width() - 50, utils::display_height()/2), Vector2f(1, 1), paddle_t, paddle_inf, paddle_inf, 6)
+
+	paddle_list =
+	{
+		Paddle(Vector2f(50, utils::display_height()/2),
+			Vector2f(1, 1),
+			paddle_t, paddle_inf, paddle_inf, 4
+		),
+		Paddle(Vector2f(utils::display_width() - 50, utils::display_height()/2),
+			Vector2f(1, 1),
+			paddle_t, paddle_inf, paddle_inf, 6
+		)
 	};
 	
 }
@@ -69,23 +88,37 @@ void Game::init_paddle_list()
 void Game::init_barrier_list()
 {
 	barrier_list.clear();
+
 	switch(current_map)
 	{
-		case 0:
-			break;
-		case 1:
-			barrier_list.clear();
-			barrier_list.push_back(Barrier(Vector2f(utils::display_width()/2, 0), Vector2f(1, 1), barrier_large_t, barrier_large_infsheet, barrier_large_inf, 2));
-			barrier_list.push_back(Barrier(Vector2f(utils::display_width()/2, utils::display_height()), Vector2f(1, 1), barrier_large_t, barrier_large_infsheet, barrier_large_inf, 8));
-			barrier_list.push_back(Barrier(Vector2f(utils::display_width()/3, utils::display_height()/3), Vector2f(1, 1), barrier_t, barrier_infsheet, barrier_inf, 5));
-			barrier_list.push_back(Barrier(Vector2f(utils::display_width()*2/3, utils::display_height()*2/3), Vector2f(1, 1), barrier_t, barrier_infsheet, barrier_inf, 5));
-			break;
+	case 0:
+		break;
+	case 1:
+		barrier_list =
+		{
+			Barrier(
+				Vector2f(utils::display_width()/2, 0),
+				Vector2f(1, 1),
+				barrier_large_t, barrier_large_infsheet, barrier_large_inf, 2
+			),
+			Barrier(
+				Vector2f(utils::display_width()/2, utils::display_height()),
+				Vector2f(1, 1),
+				barrier_large_t, barrier_large_infsheet, barrier_large_inf, 8
+			),
+			Barrier(
+				Vector2f(utils::display_width()/3, utils::display_height()/3),
+				Vector2f(1, 1),
+				barrier_t, barrier_infsheet, barrier_inf, 5
+			),
+			Barrier(
+				Vector2f(utils::display_width()*2/3, utils::display_height()*2/3),
+				Vector2f(1, 1),
+				barrier_t, barrier_infsheet, barrier_inf, 5
+			)
+		};
+		break;
 	}
-}
-
-void Game::init_background()
-{
-	background = Background(Vector2f(4, 4), background_t, background_inf);
 }
 
 void Game::add_score(Vector2i score_add)
@@ -114,47 +147,52 @@ void Game::update_timers(const float& delta_time)
 	}
 }
 
-void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time, int* current_scene)
+std::vector<BUTTON_FUNCTION> Game::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time)
 {
+	std::vector<BUTTON_FUNCTION> functions;
+
 	update_timers(delta_time);
 
 	int ball_index = 0;
 	for(Ball& temp_ball : ball_list)
 	{
-		const int goal = temp_ball.update(canvas, paddle_list, barrier_list, delta_time);
+		const GOAL_SCORE goal = temp_ball.update(canvas, paddle_list, barrier_list, delta_time);
 		switch(goal)
 		{
-			case 1: {
-				add_score(Vector2i(1, 0));
-				respawn_ball(ball_index);
+		case NO_SCORE:
+			break;
 
-				if(score.x >= score_to_win)
-				{
-					*current_scene = 4;
-					winner = 1;
-				}
+		case P1_SCORE: 
+			functions.push_back(PLAYER_1_GOAL);
 
-				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));
-				score_board.text_list[0].change_text(new_score);
-				break;
-			}	
-			case 2: {
-				add_score(Vector2i(0, 1));
-				respawn_ball(ball_index);
+			add_score(Vector2i(1, 0));
+			respawn_ball(ball_index);
 
-				if(score.y >= score_to_win)
-				{
-					*current_scene = 4;
-					winner = 2;
-				}
-
-				std::string new_score(std::to_string(score.x) + " - " + std::to_string(score.y));
-				score_board.text_list[0].change_text(new_score);
-				break;
+			if(score.x >= score_to_win)
+			{
+				functions.push_back(PLAYER_1_WIN);
 			}
+
+			break;
+	
+		case P2_SCORE: 
+			functions.push_back(PLAYER_2_GOAL);
+
+			add_score(Vector2i(0, 1));
+			respawn_ball(ball_index);
+
+			if(score.y >= score_to_win)
+			{
+				functions.push_back(PLAYER_2_WIN);
+			}
+
+			break;
+		
 		}
 		ball_index++;
 	}
+
+	// std::cout << key_pushes[0] << "\n";
 
 	int key_count = 0;
 	for(Paddle& temp_paddle : paddle_list)
@@ -169,14 +207,12 @@ void Game::update(Entity& canvas, const std::vector<bool>& key_pushes, const flo
 		temp_barrier.update(delta_time);
 	}
 
-	score_board.update();
+	return functions;
 }
 
 void Game::render(RenderWindow& window)
 {
 	window.render(background);
-
-	score_board.render(window);
 
 	for(Entity& temp_entity : entity_list)
 	{

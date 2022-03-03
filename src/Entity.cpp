@@ -41,36 +41,36 @@ void Entity::build_border_box()
 
 	switch(render_mode)
 	{
-		case 1:
-			break;
-		case 2:
-			new_border.x -= current_sprite_frame.w/2 * scale.x;
-			break;
-		case 3:
-			new_border.x -= current_sprite_frame.w * scale.x;
-			break;
-		case 4:
-			new_border.y -= current_sprite_frame.h/2 * scale.y;
-			break;
-		case 5:
-			new_border.x -= current_sprite_frame.w/2 * scale.x;
-			new_border.y -= current_sprite_frame.h/2 * scale.y;
-			break;
-		case 6:
-			new_border.x -= current_sprite_frame.w * scale.x;
-			new_border.y -= current_sprite_frame.h/2 * scale.y;
-			break;
-		case 7:
-			new_border.y -= current_sprite_frame.h * scale.y;
-			break;
-		case 8:
-			new_border.x -= current_sprite_frame.w/2 * scale.x;
-			new_border.y -= current_sprite_frame.h * scale.y;
-			break;
-		case 9:
-			new_border.x -= current_sprite_frame.w * scale.x;
-			new_border.y -= current_sprite_frame.h * scale.y;
-			break;
+	case 1:
+		break;
+	case 2:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		break;
+	case 3:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		break;
+	case 4:
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 5:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 6:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 7:
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
+	case 8:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
+	case 9:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
 	}
 
 	border_box = new_border;

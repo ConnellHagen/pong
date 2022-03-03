@@ -9,78 +9,72 @@
 #include "Ball.hpp"
 
 Paddle::Paddle(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode)
-	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode), direction(0), velocity(280.0f)
+	:Entity(p_pos, p_scale, p_texture, p_sheet, p_current, p_render_mode), direction(NONE), velocity(280.0f)
 {}
 
 Vector2f Paddle::next_pos(const float& delta_time)
 {
 	Vector2f new_pos = get_pos();
+
+	float change = floor(velocity) * delta_time;
+
 	switch(direction)
 	{
-		case 0:
-			break;
-		case 1:
-			new_pos.y -= floor(velocity) * delta_time;
-			break;
-		case 2:
-			new_pos.y += floor(velocity) * delta_time;
-			break;
+	case NONE:
+		break;
+	case UP:
+		new_pos.y -= change;
+		break;
+	case DOWN:
+		new_pos.y += change;
+		break;
 	}
+
 	return new_pos;
 }
 
-void Paddle::update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time)
+void Paddle::update(Entity* canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time)
 {
 	bool is_UP = key_pushes[0];
 	bool is_DOWN = key_pushes[1];
 
 	if(is_UP)
 	{
-		set_direction(1);
+		direction = UP;
 	}
 	else if(is_DOWN)
 	{
-		set_direction(2);
+		direction = DOWN;
 	}
 	else
 	{
-		set_direction(0);
+		direction = NONE;
 	}
-
 
 	const SDL_Rect paddle_hitbox = get_border_box();
 
-	Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y - floor(get_velocity()) * delta_time);
-	Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h + floor(get_velocity()) * delta_time);
+	Vector2f corner_top(paddle_hitbox.x, paddle_hitbox.y - floor(velocity) * delta_time);
+	Vector2f corner_bottom(paddle_hitbox.x, paddle_hitbox.y + paddle_hitbox.h + floor(velocity) * delta_time);
 
-	if(get_direction() == 1 && !canvas.is_point_within(corner_top))
+	if(direction == UP && !canvas->is_point_within(corner_top))
 		return;
-	if(get_direction() == 2 && !canvas.is_point_within(corner_bottom))
+	if(direction == DOWN && !canvas->is_point_within(corner_bottom))
 		return;
-
-	SDL_Rect test_up = paddle_hitbox;
-	test_up.y -= floor(get_velocity());
-	SDL_Rect test_down = paddle_hitbox;
-	test_down.y += floor(get_velocity());
 
 	bool dont_update = false;
+
+	SDL_Rect test_up = paddle_hitbox;
+	test_up.y -= floor(velocity);
+	SDL_Rect test_down = paddle_hitbox;
+	test_down.y += floor(velocity);
 
 	for(Ball& temp_ball : ball_list)
 	{
 		SDL_Rect ball_next = temp_ball.get_border_box();
 
-		if(get_direction() == 1 && game_math::rect_collide(ball_next, test_up))
+		if((get_direction() == 1 && game_math::rect_collide(ball_next, test_up)) ||
+		   (get_direction() == 2 && game_math::rect_collide(ball_next, test_down)))
 		{
-			// set_direction(2);
-			// update();
-			// set_direction(1);
-			dont_update = true;
-		}
-		if(get_direction() == 2 && game_math::rect_collide(ball_next, test_down))
-		{
-			// set_direction(1);
-			// update();
-			// set_direction(2);
 			dont_update = true;
 		}
 	}

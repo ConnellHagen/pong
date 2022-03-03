@@ -10,23 +10,19 @@
 #include "RenderWindow.hpp"
 #include "Text.hpp"
 
+enum SCENE_NAME{TITLE_SCREEN, GAME, END_SCREEN};
+
 struct GUI
 {
-	GUI(RenderWindow& window, const int& scene);
+	GUI();
 	~GUI();
-
-	void init_text_list(RenderWindow& window, const int& scene);
-	void init_textbutton_list();
 
 	void add_text(const Text& p_text);
 	void add_textbutton(const TextButton& p_textbutton);
 
-	// inline std::vector<Text> get_text_list(){return text_list;}
-	// inline std::vector<TextButton> get_textbutton_list(){return textbutton_list;}
-
 	void render(RenderWindow& window);
 
-	void update();
+	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords);
 
 	std::vector<Text> text_list;
 	std::vector<TextButton> textbutton_list;

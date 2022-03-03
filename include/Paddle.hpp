@@ -15,7 +15,8 @@ class Paddle : public Entity
 public:
 	Paddle(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode);
 
-	inline void set_direction(const int& p_direction){direction = p_direction;}
+	enum DIRECTION{NONE, UP, DOWN};
+	inline void set_direction(const DIRECTION& p_direction){direction = p_direction;}
 	inline int get_direction(){return direction;}
 
 	inline float get_velocity(){return velocity;}
@@ -23,11 +24,10 @@ public:
 
 	Vector2f next_pos(const float& delta_time);
 
-	void update(Entity& canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time);
+	void update(Entity* canvas, std::vector<Ball> ball_list, std::vector<bool>& key_pushes, const float& delta_time);
 
 private:
-	//0 for still, 1 for up, 2 for down
-	int direction;
+	DIRECTION direction;
 	float velocity;
 
 };

@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <ctime>
 #include <cmath>
+#include <vector>
 
 
 namespace utils
@@ -16,15 +17,9 @@ namespace utils
 		return t;
 	}
 
-	inline int display_width()
-	{
-		return 1280;
-	}
+	inline int display_width(){return 1280;}
 
-	inline int display_height()
-	{
-		return 720;
-	}
+	inline int display_height(){return 720;}
 
 	inline int random(const int& lower, const int& upper)
 	{

@@ -103,7 +103,7 @@ Vector2f Ball::next_pos()
 	return new_pos;
 }
 
-int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list, const float& delta_time)
+GOAL_SCORE Ball::update(Entity* canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list, const float& delta_time)
 {
 
 	for(Paddle& temp_paddle : paddle_list)
@@ -599,7 +599,7 @@ int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Ba
 
 	}
 
-	//canvas
+//canvas
 	SDL_Rect border_box = Entity::get_border_box();
 
 	// ball corners: top_left, top_right, bottom_right, bottom_left
@@ -612,28 +612,28 @@ int Ball::update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Ba
 
 	bool top_left_canvas, top_right_canvas, bottom_right_canvas, bottom_left_canvas = false;
 
-	if(canvas.is_point_within(ball_corners[0]))
+	if(canvas->is_point_within(ball_corners[0]))
 		top_left_canvas = true;
-	if(canvas.is_point_within(ball_corners[1]))
+	if(canvas->is_point_within(ball_corners[1]))
 		top_right_canvas = true;
-	if(canvas.is_point_within(ball_corners[2]))
+	if(canvas->is_point_within(ball_corners[2]))
 		bottom_right_canvas = true;
-	if(canvas.is_point_within(ball_corners[3]))
+	if(canvas->is_point_within(ball_corners[3]))
 		bottom_left_canvas = true;
 
-	int goal_scored = 0;
+	GOAL_SCORE goal_scored = NO_SCORE;
 
 	if(!top_left_canvas && !bottom_left_canvas)
 	{
 		Entity::set_pos(Vector2f(border_box.w/2, get_pos().y));
 		scale_velocity(Vector2f(-1, 1));
-		goal_scored = 2;
+		goal_scored = P2_SCORE;
 	}
 	else if(!top_right_canvas && !bottom_right_canvas)
 	{
 		Entity::set_pos(Vector2f(utils::display_width() - border_box.w/2, get_pos().y));
 		scale_velocity(Vector2f(-1, 1));
-		goal_scored = 1;
+		goal_scored = P1_SCORE;
 	}
 	if(!top_left_canvas && !top_right_canvas)
 	{

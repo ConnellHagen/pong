@@ -13,64 +13,20 @@
 #include "GUI.hpp"
 
 //GUI is the container of `Text`, `Button`s and other displayed non-entities.
-GUI::GUI(RenderWindow& window, const int& scene)
-{
-	init_text_list(window, scene);
-}
+GUI::GUI()
+{}
 
 GUI::~GUI()
-{
-
-}
-
-void GUI::init_text_list(RenderWindow& window, const int& scene)
-{
-	text_list.clear();
-
-	switch(scene)
-	{
-		//score board
-		case 0:
-			text_list = 
-			{
-				Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{160, 160, 160, 128}, std::string("0 - 0"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f))
-			};
-			break;
-
-		//main menu
-		case 1:
-			textbutton_list = 
-			{
-				TextButton(Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{220, 220, 220, 255}, std::string("Start"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f)), SDL_Color{250, 250, 100, 255}, SDL_Color{200, 200, 0, 255}, 1)
-			};
-			break;
-
-		//settings
-		case 2:
-			break;
-
-		//pause menu
-		case 3:
-			break;
-
-		//end screen
-		case 4:
-			text_list =
-			{
-				Text(window.get_renderer(), 5, std::string("res/fonts/Zyzol.ttf"), 100, SDL_Color{220, 220, 220, 255}, std::string("Player 0 Wins!"), Vector2f(utils::display_width() / 2.0f, utils::display_height() / 2.0f))
-			};
-			break;
-
-		//game settings
-		case 5:
-			break;
-	}
-
-}
+{}
 
 void GUI::add_text(const Text& p_text)
 {
 	text_list.push_back(p_text);
+}
+
+void GUI::add_textbutton(const TextButton& p_textbutton)
+{
+	textbutton_list.push_back(p_textbutton);
 }
 
 void GUI::render(RenderWindow& window)
@@ -84,11 +40,22 @@ void GUI::render(RenderWindow& window)
 	{
 		window.render(temp_text);
 	}
-
 }
 
-void GUI::update()
+//accumulates all of the functions that the text buttons trigger whilst updating, and returns them in a vector
+std::vector<BUTTON_FUNCTION> GUI::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords)
 {
+	std::vector<BUTTON_FUNCTION> function_queue;
 
+	for(TextButton& temp_text : textbutton_list)
+	{
+		std::vector<BUTTON_FUNCTION> temp = temp_text.update(key_pushes, mouse_coords);
+		
+		for(BUTTON_FUNCTION& func : temp)
+		{
+			function_queue.push_back(func);
+		}
+	}
+
+	return function_queue;
 }
-

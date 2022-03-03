@@ -13,6 +13,8 @@
 
 class Paddle;
 
+enum GOAL_SCORE{NO_SCORE, P1_SCORE, P2_SCORE};
+
 class Ball : public Entity
 {
 public:
@@ -32,7 +34,7 @@ public:
 
 	Vector2f next_pos();
 	
-	int update(Entity& canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list, const float& delta_time);
+	GOAL_SCORE update(Entity* canvas, std::vector<Paddle> paddle_list, std::vector<Barrier> barrier_list, const float& delta_time);
 
 private:
 	Vector2f velocity;

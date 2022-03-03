@@ -19,16 +19,16 @@
 class Game
 {
 public:
-	Game(const int& p_map, const int& p_score_to_win, RenderWindow& window);
+	Game(RenderWindow& window, Entity* p_canvas, const int& p_map, const int& p_score_to_win);
 	~Game();
-
-	//static void load_textures();
 
 	void init_entity_list();
 	void init_ball_list();
 	void init_paddle_list();
 	void init_barrier_list();
 	void init_background();
+
+	void restart_game();
 
 	inline std::vector<Entity>& get_entity_list(){return entity_list;}
 	inline std::vector<Ball>& get_ball_list(){return ball_list;}
@@ -42,13 +42,11 @@ public:
 	void respawn_ball(int ball_index);
 	void update_timers(const float& delta_time);
 
-	// 0: no winner, 1: left winner, 2: right winner
-	inline int get_winner(){return winner;}
-
-	void update(Entity& canvas, const std::vector<bool>& key_pushes, const float& delta_time, int* current_scene);
-
+	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time);
 	void render(RenderWindow& window);
 
+
+	Entity* canvas;
 
 	SDL_Texture* background_t;
 	SDL_Texture* ball_t;
@@ -70,15 +68,11 @@ private:
 	int score_to_win;
 	int ball_respawns_left = 0;
 
-	int winner;
-
 	Background background;
 	std::vector<Entity> entity_list;
 	std::vector<Ball> ball_list;
 	std::vector<Paddle> paddle_list;
 	std::vector<Barrier> barrier_list;
 	std::vector<Timer> ball_respawn_timers;
-
-	GUI score_board;
 
 };

@@ -40,16 +40,16 @@ private:
 	void build_border_box();
 };
 
+enum BUTTON_FUNCTION{RESTART_GAME, PLAYER_1_GOAL, PLAYER_2_GOAL, PLAYER_1_WIN, PLAYER_2_WIN};
+
 struct TextButton
 {
 public:
-	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const int& p_ID);
-	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const SDL_Color& p_press_color, const int& p_ID);
+	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const BUTTON_FUNCTION& p_press_function);
+	TextButton(const Text& p_text, const SDL_Color& p_hover_color, const SDL_Color& p_press_color, const BUTTON_FUNCTION& p_press_function);
 	~TextButton();
 
-	void update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, int* game_scene);
-
-	void set_color(const SDL_Color& p_color);
+	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords);
 
 	inline SDL_Rect get_border_box(){return text.border_box;}
 
@@ -62,10 +62,7 @@ public:
 	SDL_Color hover_color;
 	SDL_Color press_color;
 
-	int ID;
+	BUTTON_FUNCTION press_function;
 
 private:
-	void button_pushed(int* game_scene);
-	void button_released(int* game_scene);
-
 };
