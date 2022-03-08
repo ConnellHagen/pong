@@ -40,7 +40,7 @@ private:
 	void build_border_box();
 };
 
-enum BUTTON_FUNCTION{RESTART_GAME, PLAYER_1_GOAL, PLAYER_2_GOAL, PLAYER_1_WIN, PLAYER_2_WIN};
+enum BUTTON_FUNCTION{RESTART_GAME, OPEN_SETTINGS, OPEN_MAP_SELECT, EXIT_MENU, PLAYER_1_GOAL, PLAYER_2_GOAL, PLAYER_1_WIN, PLAYER_2_WIN};
 
 struct TextButton
 {
@@ -65,4 +65,49 @@ public:
 	BUTTON_FUNCTION press_function;
 
 private:
+};
+
+
+enum MOVEMENT_TYPE{NONE, SINE};
+
+struct TextImage
+{
+	TextImage(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode, const MOVEMENT_TYPE& p_movement, const int& p_magnitude);
+
+	std::vector<BUTTON_FUNCTION> update(const float& delta_time);
+
+	// inline float get_angle(){return angle;}
+	// inline void set_angle(const float& p_angle){angle = p_angle;}
+	// inline void rotate_deg(const float& p_rotation){angle += p_rotation;}
+
+	// inline Vector2f& get_scale(){return scale;}
+	// void set_scale(const float& p_w, const float& p_h);
+
+	inline SDL_Texture* get_texture(){return texture;}
+
+	// inline SDL_Rect get_sprite_frame(){return current_sprite_frame;}
+	// inline void set_sprite_frame(const SDL_Rect& p_imgdata){current_sprite_frame = p_imgdata;}
+
+	void next_sprite_frame();
+
+	//void move(const Vector2f& increment);
+
+	float angle = 0;
+	SDL_Rect sprite_sheet;
+	SDL_Rect current_sprite_frame;
+	SDL_Texture* texture;
+	Vector2f original_pos;
+	Vector2f pos;
+	Vector2f scale;
+	MOVEMENT_TYPE movement;
+	int magnitude;
+
+	int render_mode;
+	SDL_Rect border_box;
+
+	float accumulator;
+
+private:
+	void build_border_box();
+	void move();
 };

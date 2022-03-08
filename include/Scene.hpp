@@ -37,4 +37,6 @@ private:
 
 	SDL_Texture* background_t;
 	SDL_Rect background_inf;
+	SDL_Texture* menu_logo_t;
+	SDL_Rect menu_logo_inf;
 };

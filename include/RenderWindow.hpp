@@ -28,6 +28,7 @@ public:
 	void render(Tile& p_tile);
 	void render(Text& p_text);
 	void render(TextButton& p_text);
+	void render(TextImage& p_text);
 
 	void display();
 

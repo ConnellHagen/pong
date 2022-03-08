@@ -3,6 +3,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <vector>
 #include <string>
+#include <cmath>
 
 #include "Text.hpp"
 #include "Math.hpp"
@@ -145,7 +146,6 @@ std::vector<BUTTON_FUNCTION> TextButton::update(const std::vector<bool>& key_pus
 	std::vector<BUTTON_FUNCTION> functions;
 
 	color_state new_state = current_state;
-	// bool is_released = false;
 
 	// checks if the button has changed its state in the last frame
 	if(new_state != PRESSED && key_pushes[4] && game_math::contains_point(get_border_box(), mouse_coords))
@@ -189,4 +189,80 @@ std::vector<BUTTON_FUNCTION> TextButton::update(const std::vector<bool>& key_pus
 	}
 
 	return functions;
+}
+
+TextImage::TextImage(const Vector2f& p_pos, const Vector2f& p_scale, SDL_Texture* p_texture, const SDL_Rect& p_sheet, const SDL_Rect& p_current, const int& p_render_mode, const MOVEMENT_TYPE& p_movement, const int& p_magnitude)
+	:sprite_sheet(p_sheet), current_sprite_frame(p_current), texture(p_texture), original_pos(p_pos), pos(p_pos), scale(p_scale), movement(p_movement), magnitude(p_magnitude), render_mode(p_render_mode)
+{
+	build_border_box();
+}
+
+std::vector<BUTTON_FUNCTION> TextImage::update(const float& delta_time)
+{
+	std::vector<BUTTON_FUNCTION> functions;
+
+	accumulator += delta_time;
+	move();
+
+	return functions;
+}
+
+
+void TextImage::move()
+{
+	switch(movement)
+	{
+	case SINE:
+		pos.y = original_pos.y + magnitude * std::sin(accumulator);
+		build_border_box();
+		break;
+
+	default:
+		break;
+	}
+}
+
+void TextImage::build_border_box()
+{
+	SDL_Rect new_border = current_sprite_frame;
+	new_border.x = pos.x;
+	new_border.y = pos.y;
+	new_border.w *= scale.x;
+	new_border.h *= scale.y;
+
+	switch(render_mode)
+	{
+	case 1:
+		break;
+	case 2:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		break;
+	case 3:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		break;
+	case 4:
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 5:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 6:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		new_border.y -= current_sprite_frame.h/2 * scale.y;
+		break;
+	case 7:
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
+	case 8:
+		new_border.x -= current_sprite_frame.w/2 * scale.x;
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
+	case 9:
+		new_border.x -= current_sprite_frame.w * scale.x;
+		new_border.y -= current_sprite_frame.h * scale.y;
+		break;
+	}
+
+	border_box = new_border;
 }

@@ -12,7 +12,7 @@
 
 #include "GUI.hpp"
 
-//GUI is the container of `Text`, `Button`s and other displayed non-entities.
+//GUI is the container of `Text`, `TextButton`s and other displayed non-entities.
 GUI::GUI()
 {}
 
@@ -29,6 +29,11 @@ void GUI::add_textbutton(const TextButton& p_textbutton)
 	textbutton_list.push_back(p_textbutton);
 }
 
+void GUI::add_textimage(const TextImage& p_textimage)
+{
+	textimage_list.push_back(p_textimage);
+}
+
 void GUI::render(RenderWindow& window)
 {
 	for(Text& temp_text : text_list)
@@ -40,10 +45,15 @@ void GUI::render(RenderWindow& window)
 	{
 		window.render(temp_text);
 	}
+
+	for(TextImage& temp_text : textimage_list)
+	{
+		window.render(temp_text);
+	}
 }
 
 //accumulates all of the functions that the text buttons trigger whilst updating, and returns them in a vector
-std::vector<BUTTON_FUNCTION> GUI::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords)
+std::vector<BUTTON_FUNCTION> GUI::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time)
 {
 	std::vector<BUTTON_FUNCTION> function_queue;
 
@@ -57,5 +67,15 @@ std::vector<BUTTON_FUNCTION> GUI::update(const std::vector<bool>& key_pushes, co
 		}
 	}
 
+	for(TextImage& temp_text : textimage_list)
+	{
+		std::vector<BUTTON_FUNCTION> temp = temp_text.update(delta_time);
+		
+		for(BUTTON_FUNCTION& func : temp)
+		{
+			function_queue.push_back(func);
+		}
+	}
+	
 	return function_queue;
 }

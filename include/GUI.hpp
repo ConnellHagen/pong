@@ -10,7 +10,7 @@
 #include "RenderWindow.hpp"
 #include "Text.hpp"
 
-enum SCENE_NAME{TITLE_SCREEN, GAME, END_SCREEN};
+enum SCENE_NAME{TITLE_SCREEN, GAME, MAP_SELECTOR, SETTINGS, END_SCREEN};
 
 struct GUI
 {
@@ -19,12 +19,14 @@ struct GUI
 
 	void add_text(const Text& p_text);
 	void add_textbutton(const TextButton& p_textbutton);
+	void add_textimage(const TextImage& p_textimage);
 
 	void render(RenderWindow& window);
 
-	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords);
+	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time);
 
 	std::vector<Text> text_list;
 	std::vector<TextButton> textbutton_list;
+	std::vector<TextImage> textimage_list;
 
 };

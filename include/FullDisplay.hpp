@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <stack>
 
 #include "utils.hpp"
 #include "RenderWindow.hpp"
@@ -32,6 +33,8 @@ public:
 private:
 	void execute_function(const BUTTON_FUNCTION& func);
 
+	std::stack<SCENE_NAME> menu_stack;
+
 	//W, S, UP, DOWN, Left Click, Right Click
 	std::vector<bool> key_pushes;
 	Vector2i mouse_coords;
@@ -45,5 +48,7 @@ private:
 
 	Scene* title_screen;
 	Scene* game;
+	Scene* map_select;
+	Scene* settings;
 	Scene* end_screen;
 };

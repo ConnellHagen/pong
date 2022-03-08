@@ -54,6 +54,14 @@ void FullDisplay::render()
 		game->render(window);
 		break;
 
+	case MAP_SELECTOR:
+		map_select->render(window);
+		break;
+
+	case SETTINGS:
+		settings->render(window);
+		break;
+
 	case END_SCREEN:
 		end_screen->render(window);
 		break;
@@ -72,6 +80,14 @@ void FullDisplay::update(const float& delta_time)
 		
 	case GAME:
 		function_queue = game->update(key_pushes, mouse_coords, delta_time);
+		break;
+
+	case MAP_SELECTOR:
+		function_queue = map_select->update(key_pushes, mouse_coords, delta_time);
+		break;
+
+	case SETTINGS:
+		function_queue = settings->update(key_pushes, mouse_coords, delta_time);
 		break;
 		
 	case END_SCREEN:
@@ -171,7 +187,23 @@ void FullDisplay::execute_function(const BUTTON_FUNCTION& func)
 	{
 	case RESTART_GAME:
 		game->get_game()->restart_game();
+		game->get_gui()->text_list[0].change_text(std::string("0 - 0"));
 		scene = GAME;
+		break;
+
+	case OPEN_SETTINGS:
+		menu_stack.push(scene);
+		scene = SETTINGS;
+		break;
+
+	case OPEN_MAP_SELECT:
+		menu_stack.push(scene);
+		scene = MAP_SELECTOR;
+		break;
+
+	case EXIT_MENU:
+		scene = menu_stack.top();
+		menu_stack.pop();
 		break;
 
 	case PLAYER_1_GOAL:

@@ -46,6 +46,8 @@ void Game::restart_game()
 	init_ball_list();
 	init_paddle_list();
 	init_barrier_list();
+	clear_ball_timers();
+	score = Vector2i(0, 0);
 }
 
 void Game::init_entity_list()
@@ -145,6 +147,11 @@ void Game::update_timers(const float& delta_time)
 			i--;
 		}
 	}
+}
+
+void Game::clear_ball_timers()
+{
+	ball_respawn_timers.clear();
 }
 
 std::vector<BUTTON_FUNCTION> Game::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time)

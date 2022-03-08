@@ -41,6 +41,7 @@ public:
 
 	void respawn_ball(int ball_index);
 	void update_timers(const float& delta_time);
+	void clear_ball_timers();
 
 	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time);
 	void render(RenderWindow& window);

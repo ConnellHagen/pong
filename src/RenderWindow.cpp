@@ -59,7 +59,6 @@ render_mode determines what part of the rectangle (x,y) is (corner, edge or cent
 */
 void RenderWindow::render(Entity p_entity)
 {
-
 	SDL_Rect src;
 	src.x = p_entity.get_sprite_frame().x;
 	src.y = p_entity.get_sprite_frame().y;
@@ -130,6 +129,19 @@ void RenderWindow::render(Text& p_text)
 void RenderWindow::render(TextButton& p_text)
 {
 	render(p_text.text);
+}
+
+void RenderWindow::render(TextImage& p_text)
+{
+	SDL_Rect src;
+	src.x = p_text.current_sprite_frame.x;
+	src.y = p_text.current_sprite_frame.y;
+	src.w = p_text.current_sprite_frame.w;
+	src.h = p_text.current_sprite_frame.h;
+
+	SDL_Rect dst = p_text.border_box;
+
+	SDL_RenderCopyEx(renderer, p_text.texture, &src, &dst, static_cast<double>(p_text.angle), NULL, SDL_FLIP_NONE);
 }
 	
 void RenderWindow::display()
