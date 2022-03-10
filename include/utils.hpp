@@ -17,14 +17,20 @@ namespace utils
 		return t;
 	}
 
-	inline int display_width(){return 1280;}
-
-	inline int display_height(){return 720;}
-
 	inline int random(const int& lower, const int& upper)
 	{
 		srand((unsigned int) time (NULL));
     	return rand() % (upper - lower + 1) + lower;
 	}
+
+	constexpr int ORIG_DISPLAY_WIDTH{1280};
+	constexpr int ORIG_DISPLAY_HEIGHT{720};
+
+	class display
+	{
+	public:
+		static int DISPLAY_WIDTH;
+		static int DISPLAY_HEIGHT;
+	};
 
 }

@@ -25,6 +25,8 @@ public:
 	FullDisplay(RenderWindow& p_window);
 	~FullDisplay();
 
+	void resize_display(const int& new_width, const int& new_height);
+
 	void render();
 	void update(const float& delta_time);
 
@@ -32,6 +34,8 @@ public:
 
 private:
 	void execute_function(const BUTTON_FUNCTION& func);
+
+	Vector2f scale;
 
 	std::stack<SCENE_NAME> menu_stack;
 

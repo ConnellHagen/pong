@@ -10,6 +10,9 @@
 
 #include "FullDisplay.hpp"
 
+int utils::display::DISPLAY_WIDTH;
+int utils::display::DISPLAY_HEIGHT;
+
 int main(int argc, char* args[])
 {
 	if(SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -22,7 +25,10 @@ int main(int argc, char* args[])
 		std::cout << "TTF_Init has failed. Error: " << SDL_GetError() << "\n";
 
 
-	RenderWindow window("Pong", utils::display_width(), utils::display_height(), Vector2f(1, 1));
+	utils::display::DISPLAY_WIDTH = utils::ORIG_DISPLAY_WIDTH;
+	utils::display::DISPLAY_HEIGHT = utils::ORIG_DISPLAY_HEIGHT;
+
+	RenderWindow window("Pong", utils::display::DISPLAY_WIDTH, utils::display::DISPLAY_HEIGHT, Vector2f(1, 1));
 
 	FullDisplay display(window);
 
@@ -35,7 +41,7 @@ int main(int argc, char* args[])
 	float accumulator = 0.0f;
 	float current_time = utils::hire_time_in_seconds();
 
-	bool updated = false;
+	// bool updated = false;
 
 	int last_frame_ticks = SDL_GetTicks();
 
@@ -54,6 +60,13 @@ int main(int argc, char* args[])
 
 				switch(event.type)
 				{
+				case SDL_WINDOWEVENT:
+					if(event.window.event == SDL_WINDOWEVENT_RESIZED)
+					{
+						display.resize_display(event.window.data1, event.window.data2);
+					}
+					break;
+
 				case SDL_QUIT:
 					game_running = false;
 					break;
@@ -69,7 +82,7 @@ int main(int argc, char* args[])
 			display.update(delta_time);
 
 			last_frame_ticks = SDL_GetTicks();
-			updated = true;
+			// updated = true;
 		}
 
 		// if(!updated)
@@ -86,7 +99,7 @@ int main(int argc, char* args[])
 		// displaying
 		window.display();
 
-		updated = false;
+		// updated = false;
 	}
 
 	window.clean_up();

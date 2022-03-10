@@ -26,7 +26,7 @@ FullDisplay::FullDisplay(RenderWindow& p_window)
 	scene = TITLE_SCREEN;
 	key_pushes = std::vector<bool>(6, false);
 
-	SDL_Rect canvas_inf = {0, 0, utils::display_width(), utils::display_height()};
+	SDL_Rect canvas_inf = {0, 0, utils::display::DISPLAY_WIDTH, utils::display::DISPLAY_HEIGHT};
 	canvas = new Entity(Vector2f(0, 0), Vector2f(1, 1), nullptr, canvas_inf, canvas_inf, 1);
 
 	title_screen = new Scene(window, canvas, TITLE_SCREEN);
@@ -40,6 +40,20 @@ FullDisplay::~FullDisplay()
 	delete title_screen;
 	delete game;
 	delete end_screen;
+}
+
+void FullDisplay::resize_display(const int& new_width, const int& new_height)
+{
+	utils::display::DISPLAY_HEIGHT = new_height;
+	utils::display::DISPLAY_WIDTH = new_width;
+
+	window.update_scale();
+
+	title_screen->resize_display(new_width, new_height);
+	game->resize_display(new_width, new_height);
+	// map_select->resize_display(new_width, new_height);
+	// settings->resize_display(new_width, new_height);
+	end_screen->resize_display(new_width, new_height);
 }
 
 void FullDisplay::render()

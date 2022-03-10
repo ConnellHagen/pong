@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "Math.hpp"
+#include "utils.hpp"
 
 #include "Entity.hpp"
 	#include "Barrier.hpp"

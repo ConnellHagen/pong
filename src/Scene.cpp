@@ -39,8 +39,8 @@ void Scene::init_gui(RenderWindow& window)
 					SDL_Color{220, 220, 220, 255},
 					std::string("Start"),
 					Vector2f(
-						utils::display_width() / 2.0f,
-						utils::display_height() / 5.0f * 3.0f
+						utils::display::DISPLAY_WIDTH / 2.0f,
+						utils::display::DISPLAY_HEIGHT / 5.0f * 3.0f
 					)
 				),
 				SDL_Color{250, 250, 100, 255},
@@ -51,8 +51,8 @@ void Scene::init_gui(RenderWindow& window)
 		{
 			TextImage(
 				Vector2f(
-					utils::display_width() / 2.0f,
-					utils::display_height() / 5.0f * 2.0f
+					utils::display::DISPLAY_WIDTH / 2.0f,
+					utils::display::DISPLAY_HEIGHT / 5.0f * 2.0f
 				),
 				Vector2f(.5, .5),
 				menu_logo_t,
@@ -72,8 +72,8 @@ void Scene::init_gui(RenderWindow& window)
 				SDL_Color{160, 160, 160, 128},
 				std::string("0 - 0"),
 				Vector2f(
-					utils::display_width() / 2.0f,
-				 	utils::display_height() / 2.0f
+					utils::display::DISPLAY_WIDTH / 2.0f,
+				 	utils::display::DISPLAY_HEIGHT / 2.0f
 				)
 			)
 		};
@@ -94,8 +94,8 @@ void Scene::init_gui(RenderWindow& window)
 				SDL_Color{220, 220, 220, 255},
 				std::string("Player [NULL] Wins!"),
 				Vector2f(
-					utils::display_width() / 2.0f,
-					utils::display_height() / 2.0f
+					utils::display::DISPLAY_WIDTH / 2.0f,
+					utils::display::DISPLAY_HEIGHT / 2.0f
 				)
 			)
 		};
@@ -108,8 +108,8 @@ void Scene::init_gui(RenderWindow& window)
 					SDL_Color{220, 220, 220, 255},
 					std::string("Restart Game"),
 					Vector2f(
-						utils::display_width() / 2.0f,
-						utils::display_height() / 2.0f
+						utils::display::DISPLAY_WIDTH / 2.0f,
+						utils::display::DISPLAY_HEIGHT / 2.0f
 					)
 				),
 				SDL_Color{250, 250, 100, 255},
@@ -164,6 +164,12 @@ void Scene::init_game(RenderWindow& window)
 	}
 }
 
+void Scene::resize_display(const int& new_width, const int& new_height)
+{
+
+	background->make_tile_list();
+}
+
 std::vector<BUTTON_FUNCTION> Scene::update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time)
 {
 	switch(scene)
@@ -180,6 +186,7 @@ std::vector<BUTTON_FUNCTION> Scene::update(const std::vector<bool>& key_pushes, 
 
 		return functions;
 	}
+
 	default:
 		return gui->update(key_pushes, mouse_coords, delta_time);
 	}
