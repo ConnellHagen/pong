@@ -15,5 +15,9 @@ This is just the prototype in the current phase of development. This is subject 
 
 # Installation
 
-* This project has a long way to go until it is ready for distribution.
-* Kindly look away if you accidently install and run it properly. :)
+This project is not complete enough that I have set up an executable yet.
+
+If you would like to test out what is currently finished, the following are the dependant libraries:
+* SDL2
+* SDL2_Image
+* SDL2_TTF
