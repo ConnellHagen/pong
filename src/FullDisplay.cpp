@@ -42,18 +42,15 @@ FullDisplay::~FullDisplay()
 	delete end_screen;
 }
 
-void FullDisplay::resize_display(const int& new_width, const int& new_height)
+void FullDisplay::resize_display()
 {
-	utils::display::DISPLAY_HEIGHT = new_height;
-	utils::display::DISPLAY_WIDTH = new_width;
-
 	window.update_scale();
 
-	title_screen->resize_display(new_width, new_height);
-	game->resize_display(new_width, new_height);
-	// map_select->resize_display(new_width, new_height);
-	// settings->resize_display(new_width, new_height);
-	end_screen->resize_display(new_width, new_height);
+	title_screen->resize_display();
+	game->resize_display();
+	// map_select->resize_display();
+	// settings->resize_display();
+	end_screen->resize_display();
 }
 
 void FullDisplay::render()
@@ -187,13 +184,33 @@ void FullDisplay::update_keys(const SDL_Event* event)
 	    break;
 
 	case SDL_MOUSEMOTION:
-		mouse_coords.x = event->motion.x;
-		mouse_coords.y = event->motion.y;
+		mouse_coords = shift_coords(Vector2i(event->motion.x, event->motion.y));
+		// mouse_coords.x = event->motion.x;
+		// mouse_coords.y = event->motion.y;
 		break;
 
 	default: break;
 	}
 }
+
+
+Vector2i FullDisplay::shift_coords(const Vector2i& coords)
+{
+	double ratio_x = utils::ORIG_DISPLAY_WIDTH / static_cast<double>(utils::display::DISPLAY_WIDTH);
+	double ratio_y = utils::ORIG_DISPLAY_HEIGHT / static_cast<double>(utils::display::DISPLAY_HEIGHT);
+
+	std::cout << ratio_x << ", " << ratio_y << "\n";
+
+	int new_x = static_cast<int>(coords.x * ratio_x);
+	int new_y = static_cast<int>(coords.y * ratio_y);
+
+	Vector2i new_coords = Vector2i(new_x, new_y);
+
+	new_coords.print();
+
+	return new_coords;
+}
+
 
 void FullDisplay::execute_function(const BUTTON_FUNCTION& func)
 {

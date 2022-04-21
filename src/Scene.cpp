@@ -164,7 +164,7 @@ void Scene::init_game(RenderWindow& window)
 	}
 }
 
-void Scene::resize_display(const int& new_width, const int& new_height)
+void Scene::resize_display()
 {
 
 	background->make_tile_list();

@@ -39,14 +39,11 @@ void Background::make_tile_list()
 {
 	tile_list.clear();
 
-	const float window_x_scale = utils::display::DISPLAY_WIDTH / static_cast<float>(utils::ORIG_DISPLAY_WIDTH);
-	const float window_y_scale = utils::display::DISPLAY_HEIGHT / static_cast<float>(utils::ORIG_DISPLAY_HEIGHT);;
+	const int tile_width = std::floor(scale.x * original_img.w);
+	const int tile_height = std::floor(scale.y * original_img.h);
 
-	const int tile_width = std::floor(scale.x * original_img.w * window_x_scale);
-	const int tile_height = std::floor(scale.y * original_img.h * window_y_scale);
-
-	const int horizontal_tiles = utils::display::DISPLAY_WIDTH / tile_width;
-	const int vertical_tiles = utils::display::DISPLAY_HEIGHT / tile_height;
+	const int horizontal_tiles = std::ceil(utils::ORIG_DISPLAY_WIDTH / static_cast<float>(tile_width));
+	const int vertical_tiles = std::ceil(utils::ORIG_DISPLAY_HEIGHT / static_cast<float>(tile_height));
 
 	for(int i = 0; i < horizontal_tiles; i++)
 	{

@@ -32,7 +32,8 @@ public:
 
 	void update_scale();
 
-	inline SDL_Renderer*& get_renderer(){return renderer;}
+	inline SDL_Renderer* get_renderer(){return renderer;}
+	inline SDL_Window* get_window(){return window;}
 	
 	void clean_up();
 

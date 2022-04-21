@@ -95,8 +95,8 @@ void RenderWindow::render(Tile& p_tile)
 	SDL_Rect dst;
 	dst.x = p_tile.get_pos().x * scale.x;
 	dst.y = p_tile.get_pos().y * scale.y;
-	dst.w = p_tile.get_original_image().w * p_tile.get_scale().x * scale.x;
-	dst.h = p_tile.get_original_image().h * p_tile.get_scale().y * scale.y;
+	dst.w = std::ceil(p_tile.get_original_image().w * p_tile.get_scale().x * scale.x);
+	dst.h = std::ceil(p_tile.get_original_image().h * p_tile.get_scale().y * scale.y);
 
 	SDL_RenderCopy(renderer, p_tile.get_texture(), &src, &dst);
 }

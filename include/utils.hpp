@@ -23,14 +23,19 @@ namespace utils
     	return rand() % (upper - lower + 1) + lower;
 	}
 
+
 	constexpr int ORIG_DISPLAY_WIDTH{1280};
 	constexpr int ORIG_DISPLAY_HEIGHT{720};
-
 	class display
 	{
 	public:
+		static int ORIG_DISPLAY_X;
+		static int ORIG_DISPLAY_Y;
+
 		static int DISPLAY_WIDTH;
 		static int DISPLAY_HEIGHT;
+		static int DISPLAY_X;
+		static int DISPLAY_Y;
 	};
 
 }

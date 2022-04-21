@@ -10,8 +10,13 @@
 
 #include "FullDisplay.hpp"
 
+// global static variables
+int utils::display::ORIG_DISPLAY_X;
+int utils::display::ORIG_DISPLAY_Y;
 int utils::display::DISPLAY_WIDTH;
 int utils::display::DISPLAY_HEIGHT;
+int utils::display::DISPLAY_X;
+int utils::display::DISPLAY_Y;
 
 int main(int argc, char* args[])
 {
@@ -25,11 +30,15 @@ int main(int argc, char* args[])
 		std::cout << "TTF_Init has failed. Error: " << SDL_GetError() << "\n";
 
 
+	RenderWindow window("Pong", utils::ORIG_DISPLAY_WIDTH, utils::ORIG_DISPLAY_HEIGHT, Vector2f(1, 1));
+
+	SDL_GetWindowPosition(window.get_window(), &utils::display::ORIG_DISPLAY_X, &utils::display::ORIG_DISPLAY_Y);
+
 	utils::display::DISPLAY_WIDTH = utils::ORIG_DISPLAY_WIDTH;
 	utils::display::DISPLAY_HEIGHT = utils::ORIG_DISPLAY_HEIGHT;
-
-	RenderWindow window("Pong", utils::display::DISPLAY_WIDTH, utils::display::DISPLAY_HEIGHT, Vector2f(1, 1));
-
+	utils::display::DISPLAY_X = utils::display::ORIG_DISPLAY_X;
+	utils::display::DISPLAY_Y = utils::display::ORIG_DISPLAY_Y;
+	
 	FullDisplay display(window);
 
 
@@ -45,6 +54,7 @@ int main(int argc, char* args[])
 
 	int last_frame_ticks = SDL_GetTicks();
 
+	// main loop
 	while(game_running)
 	{
 		float new_time = utils::hire_time_in_seconds();
@@ -63,7 +73,19 @@ int main(int argc, char* args[])
 				case SDL_WINDOWEVENT:
 					if(event.window.event == SDL_WINDOWEVENT_RESIZED)
 					{
-						display.resize_display(event.window.data1, event.window.data2);
+						SDL_GetWindowSize(window.get_window(), &utils::display::DISPLAY_WIDTH, &utils::display::DISPLAY_HEIGHT);
+						SDL_GetWindowPosition(window.get_window(), &utils::display::DISPLAY_X, &utils::display::DISPLAY_Y);
+
+						// std::cout << "ORIG X: " << utils::display::ORIG_DISPLAY_X << "\n";
+						// std::cout << "ORIG Y: " << utils::display::ORIG_DISPLAY_Y << "\n";
+						// std::cout << "X: " << utils::display::DISPLAY_X << "\n";
+						// std::cout << "Y: " << utils::display::DISPLAY_Y << "\n";
+						// std::cout << "WIDTH: " << utils::display::DISPLAY_WIDTH << "\n";
+						// std::cout << "HEIGHT: " << utils::display::DISPLAY_HEIGHT << "\n";
+
+						display.resize_display();
+						//display.resize_display(&event); then use SDL_GetWindowPosition
+						//
 					}
 					break;
 

@@ -20,7 +20,7 @@ public:
 	void init_background(RenderWindow& window);
 	void init_game(RenderWindow& window);
 
-	void resize_display(const int& new_width, const int& new_height);
+	void resize_display();
 
 	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time);
 	void render(RenderWindow& window);
