@@ -25,13 +25,19 @@ public:
 	FullDisplay(RenderWindow& p_window);
 	~FullDisplay();
 
+	void resize_display();
+
 	void render();
 	void update(const float& delta_time);
 
 	void update_keys(const SDL_Event* event);
 
 private:
+	Vector2i shift_coords(const Vector2i& coords);
+
 	void execute_function(const BUTTON_FUNCTION& func);
+
+	Vector2f scale;
 
 	std::stack<SCENE_NAME> menu_stack;
 

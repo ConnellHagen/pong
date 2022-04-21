@@ -631,7 +631,7 @@ GOAL_SCORE Ball::update(Entity* canvas, std::vector<Paddle> paddle_list, std::ve
 	}
 	else if(!top_right_canvas && !bottom_right_canvas)
 	{
-		Entity::set_pos(Vector2f(utils::display_width() - border_box.w/2, get_pos().y));
+		Entity::set_pos(Vector2f(utils::display::DISPLAY_WIDTH - border_box.w/2, get_pos().y));
 		scale_velocity(Vector2f(-1, 1));
 		goal_scored = P1_SCORE;
 	}
@@ -642,7 +642,7 @@ GOAL_SCORE Ball::update(Entity* canvas, std::vector<Paddle> paddle_list, std::ve
 	}	
 	else if(!bottom_left_canvas && !bottom_right_canvas)
 	{
-		Entity::set_pos(Vector2f(get_pos().x, utils::display_height() - border_box.h/2));
+		Entity::set_pos(Vector2f(get_pos().x, utils::display::DISPLAY_HEIGHT - border_box.h/2));
 		scale_velocity(Vector2f(1, -1));
 	}
 

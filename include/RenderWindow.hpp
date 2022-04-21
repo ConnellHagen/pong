@@ -14,12 +14,10 @@
 class RenderWindow
 {
 public:
-	RenderWindow(const char* p_title, int p_w, int p_h, Vector2f p_scalar);
+	RenderWindow(const char* p_title, const int& p_w, const int& p_h, const Vector2f& p_scale);
 	int get_refresh_rate();
 
 	SDL_Texture* load_texture(const char* p_filePath);
-
-	inline SDL_Renderer*& get_renderer(){return renderer;}
 
 	void clear();
 
@@ -32,8 +30,10 @@ public:
 
 	void display();
 
-	inline void set_universal_scalar(Vector2f const &scale){universal_scalar = scale;}
-	inline Vector2f get_universal_scalar(){return universal_scalar;}
+	void update_scale();
+
+	inline SDL_Renderer* get_renderer(){return renderer;}
+	inline SDL_Window* get_window(){return window;}
 	
 	void clean_up();
 
@@ -41,6 +41,6 @@ private:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-	Vector2f universal_scalar;
+	Vector2f scale;
 
 };

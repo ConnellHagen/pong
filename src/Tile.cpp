@@ -39,15 +39,18 @@ void Background::make_tile_list()
 {
 	tile_list.clear();
 
-	int horizontal_tiles = ceil(static_cast<float>(utils::display_width()) / (scale.x * original_img.w));
-	int vertical_tiles = ceil(static_cast<float>(utils::display_height()) / (scale.y * original_img.h));
+	const int tile_width = std::floor(scale.x * original_img.w);
+	const int tile_height = std::floor(scale.y * original_img.h);
+
+	const int horizontal_tiles = std::ceil(utils::ORIG_DISPLAY_WIDTH / static_cast<float>(tile_width));
+	const int vertical_tiles = std::ceil(utils::ORIG_DISPLAY_HEIGHT / static_cast<float>(tile_height));
 
 	for(int i = 0; i < horizontal_tiles; i++)
 	{
 		for(int j = 0; j < vertical_tiles; j++)
 		{
 			tile_list.push_back(Tile(
-				Vector2f(i * scale.x * original_img.w, j * scale.y * original_img.h),
+				Vector2f(i * tile_width, j * tile_height),
 				scale,
 				texture,
 				original_img

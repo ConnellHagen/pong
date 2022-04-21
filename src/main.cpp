@@ -10,6 +10,14 @@
 
 #include "FullDisplay.hpp"
 
+// global static variables
+int utils::display::ORIG_DISPLAY_X;
+int utils::display::ORIG_DISPLAY_Y;
+int utils::display::DISPLAY_WIDTH;
+int utils::display::DISPLAY_HEIGHT;
+int utils::display::DISPLAY_X;
+int utils::display::DISPLAY_Y;
+
 int main(int argc, char* args[])
 {
 	if(SDL_Init(SDL_INIT_VIDEO) > 0)
@@ -22,8 +30,15 @@ int main(int argc, char* args[])
 		std::cout << "TTF_Init has failed. Error: " << SDL_GetError() << "\n";
 
 
-	RenderWindow window("Pong", utils::display_width(), utils::display_height(), Vector2f(1, 1));
+	RenderWindow window("Pong", utils::ORIG_DISPLAY_WIDTH, utils::ORIG_DISPLAY_HEIGHT, Vector2f(1, 1));
 
+	SDL_GetWindowPosition(window.get_window(), &utils::display::ORIG_DISPLAY_X, &utils::display::ORIG_DISPLAY_Y);
+
+	utils::display::DISPLAY_WIDTH = utils::ORIG_DISPLAY_WIDTH;
+	utils::display::DISPLAY_HEIGHT = utils::ORIG_DISPLAY_HEIGHT;
+	utils::display::DISPLAY_X = utils::display::ORIG_DISPLAY_X;
+	utils::display::DISPLAY_Y = utils::display::ORIG_DISPLAY_Y;
+	
 	FullDisplay display(window);
 
 
@@ -35,10 +50,11 @@ int main(int argc, char* args[])
 	float accumulator = 0.0f;
 	float current_time = utils::hire_time_in_seconds();
 
-	bool updated = false;
+	// bool updated = false;
 
 	int last_frame_ticks = SDL_GetTicks();
 
+	// main loop
 	while(game_running)
 	{
 		float new_time = utils::hire_time_in_seconds();
@@ -54,6 +70,25 @@ int main(int argc, char* args[])
 
 				switch(event.type)
 				{
+				case SDL_WINDOWEVENT:
+					if(event.window.event == SDL_WINDOWEVENT_RESIZED)
+					{
+						SDL_GetWindowSize(window.get_window(), &utils::display::DISPLAY_WIDTH, &utils::display::DISPLAY_HEIGHT);
+						SDL_GetWindowPosition(window.get_window(), &utils::display::DISPLAY_X, &utils::display::DISPLAY_Y);
+
+						// std::cout << "ORIG X: " << utils::display::ORIG_DISPLAY_X << "\n";
+						// std::cout << "ORIG Y: " << utils::display::ORIG_DISPLAY_Y << "\n";
+						// std::cout << "X: " << utils::display::DISPLAY_X << "\n";
+						// std::cout << "Y: " << utils::display::DISPLAY_Y << "\n";
+						// std::cout << "WIDTH: " << utils::display::DISPLAY_WIDTH << "\n";
+						// std::cout << "HEIGHT: " << utils::display::DISPLAY_HEIGHT << "\n";
+
+						display.resize_display();
+						//display.resize_display(&event); then use SDL_GetWindowPosition
+						//
+					}
+					break;
+
 				case SDL_QUIT:
 					game_running = false;
 					break;
@@ -69,7 +104,7 @@ int main(int argc, char* args[])
 			display.update(delta_time);
 
 			last_frame_ticks = SDL_GetTicks();
-			updated = true;
+			// updated = true;
 		}
 
 		// if(!updated)
@@ -86,7 +121,7 @@ int main(int argc, char* args[])
 		// displaying
 		window.display();
 
-		updated = false;
+		// updated = false;
 	}
 
 	window.clean_up();

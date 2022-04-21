@@ -20,11 +20,13 @@ public:
 	void init_background(RenderWindow& window);
 	void init_game(RenderWindow& window);
 
-	inline Game* get_game(){return game;}
-	inline GUI* get_gui(){return gui;}
+	void resize_display();
 
 	std::vector<BUTTON_FUNCTION> update(const std::vector<bool>& key_pushes, const Vector2i& mouse_coords, const float& delta_time);
 	void render(RenderWindow& window);
+
+	inline Game* get_game(){return game;}
+	inline GUI* get_gui(){return gui;}
 
 private:
 	SCENE_NAME scene;
