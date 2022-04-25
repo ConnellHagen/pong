@@ -35,7 +35,6 @@ SDL_Texture* RenderWindow::load_texture(const char* p_filePath)
 		std::cout << "Failed to load texture. Error: " << SDL_GetError() << "\n";
 
 	return texture;
-
 }
  
 int RenderWindow::get_refresh_rate()

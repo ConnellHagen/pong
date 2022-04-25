@@ -73,24 +73,7 @@ int main(int argc, char* args[])
 				case SDL_WINDOWEVENT:
 					if(event.window.event == SDL_WINDOWEVENT_RESIZED)
 					{
-						SDL_GetWindowSize(window.get_window(), &utils::display::DISPLAY_WIDTH, &utils::display::DISPLAY_HEIGHT);
-
-						utils::display::DISPLAY_WIDTH = static_cast<int>(utils::display::DISPLAY_HEIGHT * (static_cast<double>(utils::ORIG_DISPLAY_WIDTH) / utils::ORIG_DISPLAY_HEIGHT));
-
-						SDL_SetWindowSize(window.get_window(), utils::display::DISPLAY_WIDTH, utils::display::DISPLAY_HEIGHT);
-
-						SDL_GetWindowPosition(window.get_window(), &utils::display::DISPLAY_X, &utils::display::DISPLAY_Y);
-
-						// std::cout << "ORIG X: " << utils::display::ORIG_DISPLAY_X << "\n";
-						// std::cout << "ORIG Y: " << utils::display::ORIG_DISPLAY_Y << "\n";
-						// std::cout << "X: " << utils::display::DISPLAY_X << "\n";
-						// std::cout << "Y: " << utils::display::DISPLAY_Y << "\n";
-						// std::cout << "WIDTH: " << utils::display::DISPLAY_WIDTH << "\n";
-						// std::cout << "HEIGHT: " << utils::display::DISPLAY_HEIGHT << "\n";
-
 						display.resize_display();
-						//display.resize_display(&event); then use SDL_GetWindowPosition
-						//
 					}
 					break;
 

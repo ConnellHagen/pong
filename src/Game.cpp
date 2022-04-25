@@ -200,8 +200,6 @@ std::vector<BUTTON_FUNCTION> Game::update(const std::vector<bool>& key_pushes, c
 		ball_index++;
 	}
 
-	// std::cout << key_pushes[0] << "\n";
-
 	int key_count = 0;
 	for(Paddle& temp_paddle : paddle_list)
 	{

@@ -23,6 +23,8 @@
 FullDisplay::FullDisplay(RenderWindow& p_window)
 	:window(p_window)
 {
+	is_fullscreen = false;
+
 	scene = TITLE_SCREEN;
 	key_pushes = std::vector<bool>(6, false);
 
@@ -44,6 +46,15 @@ FullDisplay::~FullDisplay()
 
 void FullDisplay::resize_display()
 {
+	SDL_GetWindowSize(window.get_window(), &utils::display::DISPLAY_WIDTH, &utils::display::DISPLAY_HEIGHT);
+
+	utils::display::DISPLAY_WIDTH = static_cast<int>(utils::display::DISPLAY_HEIGHT * (static_cast<double>(utils::ORIG_DISPLAY_WIDTH) / utils::ORIG_DISPLAY_HEIGHT));
+	SDL_SetWindowSize(window.get_window(), utils::display::DISPLAY_WIDTH, utils::display::DISPLAY_HEIGHT);
+
+	SDL_SetWindowPosition(window.get_window(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+	SDL_GetWindowPosition(window.get_window(), &utils::display::DISPLAY_X, &utils::display::DISPLAY_Y);
+
 	window.update_scale();
 
 	title_screen->resize_display();
@@ -51,6 +62,24 @@ void FullDisplay::resize_display()
 	// map_select->resize_display();
 	// settings->resize_display();
 	end_screen->resize_display();
+}
+
+void FullDisplay::toggle_fullscreen()
+{
+	if(is_fullscreen)
+	{
+		SDL_SetWindowFullscreen(window.get_window(), 0);
+		SDL_SetWindowSize(window.get_window(), utils::ORIG_DISPLAY_WIDTH, utils::ORIG_DISPLAY_HEIGHT);
+		SDL_SetWindowPosition(window.get_window(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+		resize_display();
+	}
+	else
+	{
+		SDL_SetWindowFullscreen(window.get_window(), SDL_WINDOW_FULLSCREEN_DESKTOP);
+		resize_display();
+	}
+
+	is_fullscreen = !is_fullscreen;
 }
 
 void FullDisplay::render()
@@ -134,6 +163,9 @@ void FullDisplay::update_keys(const SDL_Event* event)
 	    case SDLK_DOWN:
 		    key_pushes[3] = true;
 		    break;
+		case SDLK_F11:
+			toggle_fullscreen();
+			break;
 		}
 		break;
 
@@ -185,8 +217,6 @@ void FullDisplay::update_keys(const SDL_Event* event)
 
 	case SDL_MOUSEMOTION:
 		mouse_coords = shift_coords(Vector2i(event->motion.x, event->motion.y));
-		// mouse_coords.x = event->motion.x;
-		// mouse_coords.y = event->motion.y;
 		break;
 
 	default: break;
@@ -199,14 +229,10 @@ Vector2i FullDisplay::shift_coords(const Vector2i& coords)
 	double ratio_x = utils::ORIG_DISPLAY_WIDTH / static_cast<double>(utils::display::DISPLAY_WIDTH);
 	double ratio_y = utils::ORIG_DISPLAY_HEIGHT / static_cast<double>(utils::display::DISPLAY_HEIGHT);
 
-	std::cout << ratio_x << ", " << ratio_y << "\n";
-
 	int new_x = static_cast<int>(coords.x * ratio_x);
 	int new_y = static_cast<int>(coords.y * ratio_y);
 
 	Vector2i new_coords = Vector2i(new_x, new_y);
-
-	new_coords.print();
 
 	return new_coords;
 }

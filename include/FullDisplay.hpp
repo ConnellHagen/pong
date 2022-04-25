@@ -26,11 +26,13 @@ public:
 	~FullDisplay();
 
 	void resize_display();
+	void toggle_fullscreen();
 
 	void render();
 	void update(const float& delta_time);
 
 	void update_keys(const SDL_Event* event);
+
 
 private:
 	Vector2i shift_coords(const Vector2i& coords);
@@ -38,6 +40,8 @@ private:
 	void execute_function(const BUTTON_FUNCTION& func);
 
 	Vector2f scale;
+
+	bool is_fullscreen;
 
 	std::stack<SCENE_NAME> menu_stack;
 
