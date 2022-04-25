@@ -62,7 +62,7 @@ void Game::init_ball_list()
 	ball_list =
 	{
 		Ball(
-			Vector2f(utils::display::DISPLAY_WIDTH / 2, utils::display::DISPLAY_HEIGHT / 2),
+			Vector2f(utils::ORIG_DISPLAY_WIDTH / 2, utils::ORIG_DISPLAY_HEIGHT / 2),
 			Vector2f(2, 2),
 			ball_t, ball_inf, ball_inf, 5
 		)
@@ -75,11 +75,11 @@ void Game::init_paddle_list()
 
 	paddle_list =
 	{
-		Paddle(Vector2f(50, utils::display::DISPLAY_HEIGHT / 2),
+		Paddle(Vector2f(50, utils::ORIG_DISPLAY_HEIGHT / 2),
 			Vector2f(1, 1),
 			paddle_t, paddle_inf, paddle_inf, 4
 		),
-		Paddle(Vector2f(utils::display::DISPLAY_WIDTH - 50, utils::display::DISPLAY_HEIGHT / 2),
+		Paddle(Vector2f(utils::ORIG_DISPLAY_WIDTH - 50, utils::ORIG_DISPLAY_HEIGHT / 2),
 			Vector2f(1, 1),
 			paddle_t, paddle_inf, paddle_inf, 6
 		)
@@ -99,22 +99,22 @@ void Game::init_barrier_list()
 		barrier_list =
 		{
 			Barrier(
-				Vector2f(utils::display::DISPLAY_WIDTH / 2, 0),
+				Vector2f(utils::ORIG_DISPLAY_WIDTH / 2, 0),
 				Vector2f(1, 1),
 				barrier_large_t, barrier_large_infsheet, barrier_large_inf, 2
 			),
 			Barrier(
-				Vector2f(utils::display::DISPLAY_WIDTH / 2, utils::display::DISPLAY_HEIGHT),
+				Vector2f(utils::ORIG_DISPLAY_WIDTH / 2, utils::ORIG_DISPLAY_HEIGHT),
 				Vector2f(1, 1),
 				barrier_large_t, barrier_large_infsheet, barrier_large_inf, 8
 			),
 			Barrier(
-				Vector2f(utils::display::DISPLAY_WIDTH / 3, utils::display::DISPLAY_HEIGHT / 3),
+				Vector2f(utils::ORIG_DISPLAY_WIDTH / 3, utils::ORIG_DISPLAY_HEIGHT / 3),
 				Vector2f(1, 1),
 				barrier_t, barrier_infsheet, barrier_inf, 5
 			),
 			Barrier(
-				Vector2f(utils::display::DISPLAY_WIDTH * 2 / 3, utils::display::DISPLAY_HEIGHT * 2 / 3),
+				Vector2f(utils::ORIG_DISPLAY_WIDTH * 2 / 3, utils::ORIG_DISPLAY_HEIGHT * 2 / 3),
 				Vector2f(1, 1),
 				barrier_t, barrier_infsheet, barrier_inf, 5
 			)
@@ -142,7 +142,7 @@ void Game::update_timers(const float& delta_time)
 		ball_respawn_timers[i].decrease(delta_time);
 		if(ball_respawn_timers[i].is_timer_done())
 		{
-			ball_list.push_back(Ball(Vector2f(utils::display::DISPLAY_WIDTH / 2, utils::display::DISPLAY_HEIGHT / 2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5));
+			ball_list.push_back(Ball(Vector2f(utils::ORIG_DISPLAY_WIDTH / 2, utils::ORIG_DISPLAY_HEIGHT / 2), Vector2f(2, 2), ball_t, ball_inf, ball_inf, 5));
 			ball_respawn_timers.erase(ball_respawn_timers.begin() + i);
 			i--;
 		}
